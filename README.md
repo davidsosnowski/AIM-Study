@@ -8,10 +8,10 @@ This repository contains the raw and processed data files, and associated R scri
 If you have any questions, or would like to collaborate using these data, please contact the study's principal investigator (PI), Marcia Winter (see email below).
 
 ## Study Investigators
-Marcia A. Winter, PhD: <mawinter@vcu.edu>
-David W. Sosnowski, PhD: <dsosnow1@jhu.edu>
-CJ Alderson, MS: <aldersoncj@vcu.edu>
-Cathryn Richmond, PhD: <richmondce@alumni.vcu.edu>
+Marcia A. Winter, PhD: <mawinter@vcu.edu>\
+David W. Sosnowski, PhD: <dsosnow1@jhu.edu>\
+CJ Alderson, MS: <aldersoncj@vcu.edu>\
+Cathryn Richmond, PhD: <richmondce@alumni.vcu.edu>\
 Casey Burton, MEd: <burtoncd@vcu.edu>
 
  
