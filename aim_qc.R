@@ -11,5 +11,18 @@ getwd()
 library( haven )
 
 # import data
-fall <- read_sav( "AIM Data Fall.sav" )
+fall <- read_sav( "AIM Data Fall Original.sav" )
 spring <- read_sav( "AIM Data Spring.sav" )
+
+# view data
+View( fall )
+View( spring )
+
+
+                          #######################
+                          ### QC of Fall data ###
+                          #######################
+
+
+
+
