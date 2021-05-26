@@ -71,10 +71,7 @@ names( fall.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
 write.csv( fall.qc, "raw_data_fall.csv", row.names = F, quote = F )
 
 
-  
-  
-  
-  
+
 
                        #########################
                        ### QC of Spring data ###
