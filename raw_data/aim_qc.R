@@ -68,7 +68,7 @@ names( fall.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "PHQ8", "PHQ9", "valid5" )
 
 # write out raw data file for data sharing
-write.csv( fall.qc, "raw_data_fall.csv", row.names = F, quote = F )
+write_csv( fall.qc, "raw_data_fall.csv" )
 
 
 
@@ -140,4 +140,4 @@ names( spring.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "COVID5", "COVID6", "COVID7", "COVID8", "COVID9" )
 
 # write out raw data file for data sharing
-write.csv( spring.qc, "raw_data_spring.csv", row.names = F, quote = F )
+write_csv( spring.qc, "raw_data_spring.csv" )
