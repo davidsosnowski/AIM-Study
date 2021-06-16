@@ -1,18 +1,20 @@
-##################################
-# ACEs, Identity & Morality Study
+########################################
+# ACEs, Identity & Morality (AIM) Study
 # Data Preparation and QC
 # Author: David W. Sosnowski
 # Email: dsosnow1@jhu.edu
-##################################
+########################################
 
 getwd()
 
 # load necessary packages
 library( haven )
+library( psych )
 
 # import data
 fall <- read_sav( "AIM Data Fall Original.sav" )
 spring <- read_sav( "AIM Data Spring.sav" )
+
 
 
                           #######################
@@ -66,6 +68,38 @@ names( fall.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "GAD1", "GAD2", "GAD3", "GAD4", "GAD5", "GAD6", "GAD7", 
                        "PHQ1", "PHQ2", "PHQ3", "PHQ4", "PHQ5", "PHQ6", "PHQ7", 
                        "PHQ8", "PHQ9", "valid5" )
+
+# check validity questions
+table( fall.qc$valid1 ) # correct answer = 1 (n = 244)
+table( fall.qc$valid2 ) # correct answer = 6 (n = 271)
+table( fall.qc$valid3 ) # correct answer = 1 (n = 147)
+table( fall.qc$valid4 ) # correct answer = 1 (n = 271)
+table( fall.qc$valid5 ) # correct answer = 1 (n = 234)
+
+fall.qc$keep <- ifelse( fall.qc$valid1 == 1 & fall.qc$valid2 == 6 & 
+                          fall.qc$valid3 == 6 & fall.qc$valid4 == 1 & 
+                          fall.qc$valid5 == 1, 1, 0 )
+
+table( fall.qc$keep, exclude = NULL ) # 6 valid participants
+
+### the following quality assurance questions may not be valid
+# I get paid bi-weekly by unicorns
+# All of my friends say that I would make a great poodle
+# All of my friends are space aliens
+
+fall.qc$keep <- ifelse( fall.qc$valid2 == 6 & fall.qc$valid4 == 1, 1, 0 )
+
+table( fall.qc$keep, exclude = NULL ) # 261 valid participants
+
+fall.qc <- fall.qc[ which( fall.qc$keep == 1 ), ]
+
+
+# explore study completion time
+fall.qc$Duration.M <- fall.qc$Duration / 60 # convert from seconds to minutes
+describe( fall.qc$Duration.M )
+#  n    mean    sd     median    min     max   
+# 261  88.11  326.27   25.40    9.25   3095.20
+
 
 # write out raw data file for data sharing
 write_csv( fall.qc, "raw_data_fall.csv" )
@@ -138,6 +172,29 @@ names( spring.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "PHQ1", "PHQ2", "PHQ3", "PHQ4", "PHQ5", "PHQ6", "PHQ7", 
                        "PHQ8", "PHQ9", "valid5", "COVID1", "COVID2", "COVID3", "COVID4", 
                        "COVID5", "COVID6", "COVID7", "COVID8", "COVID9" )
+
+# remove participants with incorrect responses to quality assurance questions
+table( spring.qc$valid1 ) # correct answer = 1 (n = 451)
+table( spring.qc$valid2 ) # correct answer = 6 (n = 427)
+table( spring.qc$valid3 ) # correct answer = 6 (n = 431)
+table( spring.qc$valid4 ) # correct answer = 1 (n = 419)
+table( spring.qc$valid5 ) # correct answer = 1 (n = 443)
+
+spring.qc$keep <- ifelse( spring.qc$valid1 == 1 & spring.qc$valid2 == 6 & 
+                            spring.qc$valid3 == 6 & spring.qc$valid4 == 1 & 
+                            spring.qc$valid5 == 1, 1, 0 )
+
+table( spring.qc$keep, exclude = NULL ) # 364 valid participants
+
+spring.qc <- spring.qc[ which( spring.qc$keep == 1 ), ]
+
+
+# explore study completion time
+spring.qc$Duration.M <- spring.qc$Duration / 60 # convert from seconds to minutes
+describe( spring.qc$Duration.M )
+#  n    mean    sd     median   min    max   
+# 364  153.66  783.42  31.73  11.72  11661.02
+
 
 # write out raw data file for data sharing
 write_csv( spring.qc, "raw_data_spring.csv" )
