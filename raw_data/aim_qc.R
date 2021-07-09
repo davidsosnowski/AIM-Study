@@ -10,6 +10,7 @@ getwd()
 # load necessary packages
 library( haven )
 library( psych )
+library( tidyverse )
 
 # import data
 fall <- read_sav( "AIM Data Fall Original.sav" )
@@ -47,8 +48,8 @@ names( fall.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "ACE10.1", "ACE10.2", "ACE10.3", "ACE10.4", "ACE10.4.1", "ACE10.5",
                        "ACE11.1", "ACE11.2", "ACE11.3", "ACE11.4", "ACE11.4.1", "ACE11.5",
                        "ACE12.1", "ACE12.5",
-                       "ACE13.1", "ACE13.4", "ACE13.4.1", "ACE13.5",
-                       "ACE14.1", "ACE14.5", "ACE15.1", "ACE15.5", 
+                       "ACE13.1", "ACE13.4.1", "ACE13.5",
+                       "ACE14.1", "ACE14.4.1", "ACE14.5", "ACE15.1", "ACE15.5", 
                        "PhysHealth", "PsycHealth", "Smoke", "AgeSmoke", "IH1", 
                        "IH2", "IH3", "IH4", "IH5", "IH6", "IH7", "IH8", "IH9", 
                        "IH10", "IH11", "IH12", "valid1", "IH13", "IH14", "IH15", "IH16", 
