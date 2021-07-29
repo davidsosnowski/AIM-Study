@@ -1,8 +1,9 @@
 #######################################
 # AIM Study
-# Sum Scores vs. Perception ms
+# Perceptions manuscript
+# Data cleaning & preparation
 # David W. Sosnowski, PhD
-#####################################
+#######################################
 
 getwd()
 
@@ -26,18 +27,20 @@ fall2 <- fall %>% select( ID, Duration.M, Age, Sex, Race1, Race2, Race3, Race4,
                           GAD1, GAD2, GAD3, GAD4, GAD5, GAD6, GAD7, PHQ1, PHQ2,
                           PHQ3, PHQ4, PHQ5, PHQ6, PHQ7, PHQ8, PHQ9 )
 
-# recode data
+# recode sex
 fall2$m0f1 <- ifelse( fall2$Sex == 2, 0, fall2$Sex )
 table( fall2$m0f1, exclude = NULL )
 #  0 (male)   1 (female)
 #    65           196 
 
+# recode race to Black/White
 fall2$Race.b <- ifelse( fall2$Race7 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) & is.na( fall2$Race3 ) & 
                            is.na( fall2$Race4 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) & is.na( fall2$Race8 ), 1, 0 )
 table( fall2$Race.b, exclude = NULL )
 #  0 (other)   1 (white)
 #     174         87 
 
+# recode ACE to 0 = no, 1 = yes
 fall2$ACE1.1 <- ifelse( fall2$ACE1.1 == 5, 1, 0 )
 fall2$ACE2.1 <- ifelse( fall2$ACE2.1 == 5, 1, 0 )
 fall2$ACE3.1 <- ifelse( fall2$ACE3.1 == 5, 1, 0 )
@@ -69,20 +72,24 @@ spring2 <- spring %>% select( ID, Duration.M, Age, Sex, Race1, Race2, Race3, Rac
                           ACE10.1, ACE10.5, ACE11.1, ACE11.5, ACE12.1, ACE12.5,
                           ACE13.1, ACE13.5, ACE14.1, ACE14.5, ACE15.1, ACE15.5,
                           GAD1, GAD2, GAD3, GAD4, GAD5, GAD6, GAD7, PHQ1, PHQ2,
-                          PHQ3, PHQ4, PHQ5, PHQ6, PHQ7, PHQ8, PHQ9 )
+                          PHQ3, PHQ4, PHQ5, PHQ6, PHQ7, PHQ8, PHQ9, COVID1,
+                          COVID2, COVID3, COVID4, COVID5, COVID6, COVID7, 
+                          COVID8, COVID9 )
 
-# recode data
+# recode sex
 spring2$m0f1 <- ifelse( spring2$Sex == 2, 0, spring2$Sex )
 table( spring2$m0f1, exclude = NULL )
 #  0 (male)   1 (female)
 #    85           279 
 
+# recode race
 spring2$Race.b <- ifelse( spring2$Race7 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) & is.na( spring2$Race3 ) & 
                           is.na( spring2$Race4 ) & is.na( spring2$Race5 ) & is.na( spring2$Race6 ) & is.na( spring2$Race8 ), 1, 0 )
 table( spring2$Race.b, exclude = NULL )
 #  0 (other)   1 (white)
 #     257         107 
 
+# recode ACEs
 spring2$ACE1.1 <- ifelse( spring2$ACE1.1 == 5, 1, 0 )
 spring2$ACE2.1 <- ifelse( spring2$ACE2.1 == 5, 1, 0 )
 spring2$ACE3.1 <- ifelse( spring2$ACE3.1 == 5, 1, 0 )
@@ -104,9 +111,15 @@ spring2$cohort <- 2
 
 # check if column names match
 stopifnot( identical( colnames( fall2 ), colnames( spring2 ) ) )
+# COVID items not in fall cohort
 
 # merge tibbles
-fall.spring <- bind_rows( fall2[ 1:261, 1:64 ], spring2[ 1:364, 1:64 ] )
+fall.spring <- bind_rows( fall2[ 1:261, 1:64 ], spring2[ 1:364, 1:73 ] )
+
+
+###########################
+## Cleaning outcome vars ##
+###########################
 
 # create GAD-7 total scores
 fall.spring$GAD7tot <- fall.spring$GAD1 + fall.spring$GAD2 + fall.spring$GAD3 +
@@ -160,7 +173,7 @@ fall.spring$GAD7.rtot <- fall.spring$GAD1.r + fall.spring$GAD2.r + fall.spring$G
   fall.spring$GAD4.r + fall.spring$GAD5.r + fall.spring$GAD6.r + fall.spring$GAD7.r
 
 # check reliability
-GAD.r <- fall.spring[ ,c( 66:72 ) ]
+GAD.r <- fall.spring[ ,c( 75:81 ) ]
 psych::alpha( GAD.r ) # .87
 
 # create clinical cut-offs
@@ -240,7 +253,7 @@ fall.spring$PHQ9.rtot <- fall.spring$PHQ1.r + fall.spring$PHQ2.r + fall.spring$P
   fall.spring$PHQ8.r + fall.spring$PHQ9.r
 
 # check reliability
-PHQ.r <- fall.spring[ ,c( 76:84 ) ]
+PHQ.r <- fall.spring[ ,c( 85:93 ) ]
 psych::alpha( PHQ.r ) # .89
 
 # create clinical cut-offs
@@ -255,26 +268,24 @@ table( fall.spring$PHQ.clinical )
 prop.table( table( fall.spring$PHQ.clinical ) )*100
 
 
-# write out merged and cleaned file
-write_csv( fall.spring, file = "perceptions_fall_spring.csv" )
-
-################################################################################
-#####################
-## cumulative ACEs ##
-#####################
-
 # clean up environment
 df1 <- fall.spring
 rm( list = c( "fall", "fall.spring", "fall2", "GAD", "GAD.r", "PHQ", "PHQ.r",
               "spring", "spring2" ) )
 
-# subset ACE data
+
+###########################
+## Cleaning ACE variable ##
+###########################
+
+# Create cumulative ACE score
 ACE.sum <- df1[ ,c( 1,64,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44 ) ]
 
 # create summary score
 ACE.sum$ACE.count <- rowSums( ACE.sum[ ,3:17 ] )
 
 # describe ACE summary score
+library( psych )
 describe( ACE.sum$ACE.count )
 table( ACE.sum$ACE.count )
 
@@ -293,7 +304,7 @@ ggsave( p, filename = "ACE_Frequency_All.png", bg = "transparent" )
 
 # facet for separate cohorts
 ACE.sum$cohort <- factor( ACE.sum$cohort, levels = c( 1, 2 ), labels = c( "Fall", "Spring" ) )
-p <- ggplot( ACE.sum, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( ) +
+p2 <- ggplot( ACE.sum, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( ) +
   geom_text( stat = "count", aes( label = ..count.., vjust = -1 ) ) + 
   theme( legend.position = "none", panel.border = element_blank(), panel.grid.major = element_blank(), 
          panel.grid.minor = element_blank(), axis.line = element_line( colour = "black" ), 
@@ -302,6 +313,7 @@ p <- ggplot( ACE.sum, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + ge
   scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,11,1 ) ) + 
   scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) )
 p2 <- p + facet_grid( . ~ cohort )
+p2
 ggsave( p2, filename = "ACE_Frequency_by_Cohort.png", bg = "transparent" )
 
 
@@ -367,3 +379,68 @@ ACE.percep.spring %>%
   labs( x = "Adverse Childhood Experience", y = "Perceived Negative Impact" ) +
   geom_text( data = means.spring, aes( x = question, y = response, label = round( response, digits = 2 ) ), 
              size = 3, vjust = 0 )
+
+# clean up environment
+rm( list = c( "p", "p2", "means.all", "means.fall", "means.spring", "ACE.sum", 
+              "ACE.percep", "ACE.percep.fall", "ACE.percep.fall.long", 
+              "ACE.percep.long", "ACE.percep.spring", "ACE.percep.spring.long", 
+              "df1" ) )
+
+# create ACE perceptions score
+df2$ACE.percep <- rowMeans( 
+  df2[ ,c( 17,19,21,23,25,27,29,31,33,35,37,39,41,43,45 ) ], na.rm = T )
+df2$ACE.percep <- ifelse( is.nan( df2$ACE.percep ), NA, df2$ACE.percep )
+describe( df2$ACE.percep )
+
+# plot perception scores
+df3 <- df2[ which( !is.na( df2$ACE.percep ) ), ]
+p <- ggplot( df3, aes( x = ACE.percep ) ) + 
+  geom_histogram( color = "darkblue", fill = "lightblue" )
+
+p + geom_vline( aes( xintercept = mean( ACE.percep ) ),
+              color = "blue", linetype = "dashed", size = 1 )
+
+
+# remove individuals not of typical college age
+table( df2$Age ) # remove individuals over age 22 (n = 25)
+df2 <- df2[ which( df2$Age < 23 ), ]
+
+
+# examine correlations among study variables
+library( Hmisc )
+cors <- df2[ ,c( "ACE.count", "ACE.percep", "Age", "PHQ9.rtot", "GAD7.rtot",
+                 "Race.b", "m0f1", "ses1" ) ]
+x <- rcorr( as.matrix( cors ) )
+
+flattenCorrMatrix <- function( cormat, pmat ) {
+  ut <- upper.tri( cormat )
+  data.frame(
+    row = rownames( cormat )[ row( cormat )[ ut ] ],
+    column = rownames( cormat )[ col( cormat )[ ut ] ],
+    cor  = ( cormat )[ ut ],
+    p = pmat[ ut ]
+  )
+}
+
+flattenCorrMatrix( x$r, x$P )
+
+library( corrplot )
+source( "http://www.sthda.com/upload/rquery_cormat.r" )
+corrplot( x$r, type = "lower", sig.level = 0.05, p.mat = x$P, insig = "p-value" )
+
+x2 <- cor( cors, use = "pairwise.complete.obs" )
+corrplot( x2, type = "lower", sig.level = 0.05 )
+
+# clean up environment
+rm( list = c( "cors", "x", "x2", "flattenCorrMatrix", "rquery.cormat" ) )
+
+
+# re-code SES variable to 3-levels (more than enough, just enough, not enough)
+df2$ses1.r <- ifelse( df2$ses1 < 3, 0, df2$ses1 )
+df2$ses1.r <- ifelse( df2$ses1 == 3, 1, df2$ses1.r )
+df2$ses1.r <- ifelse( df2$ses1 == 4, 2, df2$ses1.r )
+table( df2$ses1.r )
+
+# write out merged and cleaned file
+write_csv( df2, file = "perceptions_fall_spring_cleaned.csv" )
+
