@@ -5,7 +5,7 @@ The purpose of this research study is to understand how adverse childhood experi
 
 This repository contains the raw and processed data files, and associated R scripts, for research questions probed using these data.
 
-If you have any questions, or would like to collaborate using these data, please contact the study's principal investigator (PI), Marcia Winter (see email below).
+If you have any questions, or would like to collaborate using these data, please contact the study's principal investigator (PI), Marcia Winter (see email below). All questions related to data preparation and analysis can be directed to David Sosnowski.
 
 ## Study Investigators
 Marcia A. Winter, PhD: <mawinter@vcu.edu>\
