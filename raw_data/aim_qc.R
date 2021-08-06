@@ -88,6 +88,7 @@ table( fall.qc$keep, exclude = NULL ) # 6 valid participants
 # All of my friends say that I would make a great poodle
 # All of my friends are space aliens
 
+# only use quality assurance items that ask, "please choose 'strongly agree/disagree'"
 fall.qc$keep <- ifelse( fall.qc$valid2 == 6 & fall.qc$valid4 == 1, 1, 0 )
 
 table( fall.qc$keep, exclude = NULL ) # 261 valid participants
@@ -175,6 +176,7 @@ names( spring.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "COVID5", "COVID6", "COVID7", "COVID8", "COVID9" )
 
 # remove participants with incorrect responses to quality assurance questions
+# all of these items ask for participants to choose "strongly agree/disagree"
 table( spring.qc$valid1 ) # correct answer = 1 (n = 451)
 table( spring.qc$valid2 ) # correct answer = 6 (n = 427)
 table( spring.qc$valid3 ) # correct answer = 6 (n = 431)

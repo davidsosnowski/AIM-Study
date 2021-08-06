@@ -33,7 +33,7 @@ table( fall2$m0f1, exclude = NULL )
 #  0 (male)   1 (female)
 #    65           196 
 
-# recode race to Black/White
+# recode race to White/Other
 fall2$Race.b <- ifelse( fall2$Race7 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) & is.na( fall2$Race3 ) & 
                            is.na( fall2$Race4 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) & is.na( fall2$Race8 ), 1, 0 )
 table( fall2$Race.b, exclude = NULL )
