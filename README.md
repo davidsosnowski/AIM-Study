@@ -14,7 +14,7 @@ CJ Alderson, MS: <aldersoncj@vcu.edu>\
 Cathryn Richmond, PhD: <richmondce@alumni.vcu.edu>\
 Casey Burton, MEd: <burtoncd@vcu.edu>\
 
-## Folder Descriptions
+## Directories
 **raw_data**: Contains code to prepare the raw data for sharing. Collaborators should start with the data files in this folder.
 
 **perceptions_ms**: Contains code and associated data files for the following manuscript, which is currently under review: *Perceived Negative Effects of Adverse Childhood Experiences as a Predictor of Depressive and Anxiety Symptoms Among College Students*.
