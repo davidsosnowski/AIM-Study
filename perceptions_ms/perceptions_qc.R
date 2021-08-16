@@ -2,7 +2,6 @@
 # AIM Study
 # Perceptions manuscript
 # Data cleaning & preparation
-# David W. Sosnowski, PhD
 #######################################
 
 getwd()
@@ -11,8 +10,8 @@ getwd()
 library( tidyverse )
 
 # load data
-fall <- read_csv( "/Users/david/Desktop/aim_study/raw_data/raw_data_fall.csv" )
-spring <- read_csv( "/Users/david/Desktop/aim_study/raw_data/raw_data_spring.csv" )
+fall <- read_csv( "raw_data_fall.csv" )
+spring <- read_csv( "raw_data_spring.csv" )
 
 ### prep fall data for merging
 # subset necessary variables from data files
@@ -299,7 +298,7 @@ p <- ggplot( ACE.sum, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + ge
   scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,11,1 ) ) + 
   scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) )
 p
-ggsave( p, filename = "ACE_Frequency_All.png", bg = "transparent" )
+#ggsave( p, filename = "ACE_Frequency_All.png", bg = "transparent" )
 
 
 # facet for separate cohorts
@@ -314,7 +313,7 @@ p2 <- ggplot( ACE.sum, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + g
   scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) )
 p2 <- p + facet_grid( . ~ cohort )
 p2
-ggsave( p2, filename = "ACE_Frequency_by_Cohort.png", bg = "transparent" )
+#ggsave( p2, filename = "ACE_Frequency_by_Cohort.png", bg = "transparent" )
 
 
 
@@ -424,22 +423,17 @@ flattenCorrMatrix <- function( cormat, pmat ) {
 
 flattenCorrMatrix( x$r, x$P )
 
+# make it better to look at
 library( corrplot )
 source( "http://www.sthda.com/upload/rquery_cormat.r" )
 corrplot( x$r, type = "lower", sig.level = 0.05, p.mat = x$P, insig = "p-value" )
 
+# remove p-value labels
 x2 <- cor( cors, use = "pairwise.complete.obs" )
 corrplot( x2, type = "lower", sig.level = 0.05 )
 
 # clean up environment
 rm( list = c( "cors", "x", "x2", "flattenCorrMatrix", "rquery.cormat" ) )
-
-
-# re-code SES variable to 3-levels (more than enough, just enough, not enough)
-df2$ses1.r <- ifelse( df2$ses1 < 3, 0, df2$ses1 )
-df2$ses1.r <- ifelse( df2$ses1 == 3, 1, df2$ses1.r )
-df2$ses1.r <- ifelse( df2$ses1 == 4, 2, df2$ses1.r )
-table( df2$ses1.r )
 
 # write out merged and cleaned file
 write_csv( df2, file = "perceptions_fall_spring_cleaned.csv" )
