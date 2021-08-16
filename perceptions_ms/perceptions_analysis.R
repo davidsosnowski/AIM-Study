@@ -1,6 +1,8 @@
 ############################################################################
-# Perceived Negative Effects of Adverse Childhood Experiences 
-# as a Predictor of Depressive and Anxiety Symptoms Among College Students
+# AIM Study
+# Perceptions Manuscript
+# Data analysis
+# David W. Sosnowski, PhD
 ############################################################################
 
 getwd()
