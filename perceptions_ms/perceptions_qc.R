@@ -10,8 +10,8 @@ getwd()
 library( tidyverse )
 
 # load data
-fall <- read_csv( "raw_data_fall.csv" )
-spring <- read_csv( "raw_data_spring.csv" )
+fall <- read_csv( "/Users/david/Desktop/aim_study/raw_data/raw_data_fall.csv" )
+spring <- read_csv( "/Users/david/Desktop/aim_study/raw_data/raw_data_spring.csv" )
 
 ### prep fall data for merging
 # subset necessary variables from data files
@@ -109,7 +109,7 @@ spring2$ACE15.1 <- ifelse( spring2$ACE15.1 == 23, 1, 0 )
 spring2$cohort <- 2
 
 # check if column names match
-stopifnot( identical( colnames( fall2 ), colnames( spring2 ) ) )
+#stopifnot( identical( colnames( fall2 ), colnames( spring2 ) ) )
 # COVID items not in fall cohort
 
 # merge tibbles
@@ -426,9 +426,6 @@ flattenCorrMatrix( x$r, x$P )
 # make it better to look at
 library( corrplot )
 source( "http://www.sthda.com/upload/rquery_cormat.r" )
-corrplot( x$r, type = "lower", sig.level = 0.05, p.mat = x$P, insig = "p-value" )
-
-# remove p-value labels
 x2 <- cor( cors, use = "pairwise.complete.obs" )
 corrplot( x2, type = "lower", sig.level = 0.05 )
 
@@ -436,5 +433,5 @@ corrplot( x2, type = "lower", sig.level = 0.05 )
 rm( list = c( "cors", "x", "x2", "flattenCorrMatrix", "rquery.cormat" ) )
 
 # write out merged and cleaned file
-write_csv( df2, file = "perceptions_fall_spring_cleaned.csv" )
+write_csv( df2, file = "/Users/david/Desktop/aim_study/perceptions_ms/perceptions_fall_spring_cleaned.csv" )
 

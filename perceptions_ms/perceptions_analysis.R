@@ -1,9 +1,8 @@
-############################################################################
+##########################
 # AIM Study
 # Perceptions Manuscript
 # Data analysis
-# David W. Sosnowski, PhD
-############################################################################
+##########################
 
 getwd()
 
@@ -13,7 +12,7 @@ library( psych )
 library( jtools )
 
 # load data
-df1 <- read_csv( "/Users/david/Desktop/aim_study/perceptions_ms/perceptions_fall_spring_cleaned.csv" )
+df1 <- read_csv( "perceptions_fall_spring_cleaned.csv" )
 
 
 #############################
@@ -38,10 +37,11 @@ summ( m2.adj <- lm( PHQ9.rtot ~ Age + Race.b + m0f1 + factor( ses1 ) +
 
 
 
-###############################
-# Sensitivity Analysis:
-# Inclusion of COVID covariate
-###############################
+                            ################################
+                            #     Sensitivity Analysis:    #
+                            # Inclusion of COVID covariate #
+                            ################################
+
 
 #############################
 # Model 3
