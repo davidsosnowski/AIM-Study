@@ -1,20 +1,23 @@
-#######################################
-# AIM Study
-# Perceptions manuscript
-# Data cleaning & preparation
-#######################################
+#####################################################
+# ACEs, Identity & Morality (AIM) Study
+# Data Preparation and QC
+# Author: David W. Sosnowski
+# Email: dsosnow1@jhu.edu
+# Manuscript: Perceived Negative Effects of Adverse Childhood Experiences as a 
+# Predictor of Depressive and Anxiety Symptoms Among College Students
+#####################################################
 
 getwd()
 
-# load necessary packages
+### Load necessary packages
 library( tidyverse )
 
-# load data
-fall <- read_csv( "/Users/david/Desktop/aim_study/raw_data/raw_data_fall.csv" )
-spring <- read_csv( "/Users/david/Desktop/aim_study/raw_data/raw_data_spring.csv" )
+### Load data
+fall <- read_csv( "AIM_data_fall.csv" )
+spring <- read_csv( "AIM_data_spring.csv" )
 
-### prep fall data for merging
-# subset necessary variables from data files
+### Prep fall data for merging
+### Subset necessary variables
 names( fall )
 fall2 <- fall %>% select( ID, Duration.M, Age, Sex, Race1, Race2, Race3, Race4, 
                           Race5, Race6, Race7, Race8, Race_Other, ses1, ses2, 
@@ -26,20 +29,28 @@ fall2 <- fall %>% select( ID, Duration.M, Age, Sex, Race1, Race2, Race3, Race4,
                           GAD1, GAD2, GAD3, GAD4, GAD5, GAD6, GAD7, PHQ1, PHQ2,
                           PHQ3, PHQ4, PHQ5, PHQ6, PHQ7, PHQ8, PHQ9 )
 
-# recode sex
+### Recode sex
 fall2$m0f1 <- ifelse( fall2$Sex == 2, 0, fall2$Sex )
 table( fall2$m0f1, exclude = NULL )
 #  0 (male)   1 (female)
 #    65           196 
 
-# recode race to White/Other
+### Recode race
+# 1 (Alaskan, Hawaiian, or American Native )
+# 2 (Latina/o/x, Chicana/o, Hispanic, or Spanish Origin)
+# 3 (African or Caribbean)
+# 4 (Middle Eastern or West Asian)
+# 5 (East Asian)
+# 6 (Pacific Islander)
+# 7 (Caucasian or European American)
+# 8 (other) - most responses were Black/African American
 fall2$Race.b <- ifelse( fall2$Race7 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) & is.na( fall2$Race3 ) & 
                            is.na( fall2$Race4 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) & is.na( fall2$Race8 ), 1, 0 )
 table( fall2$Race.b, exclude = NULL )
-#  0 (other)   1 (white)
+#  0 (other)   1 (Caucasian/European American)
 #     174         87 
 
-# recode ACE to 0 = no, 1 = yes
+### Recode ACEs to 0 = No, 1 = Yes
 fall2$ACE1.1 <- ifelse( fall2$ACE1.1 == 5, 1, 0 )
 fall2$ACE2.1 <- ifelse( fall2$ACE2.1 == 5, 1, 0 )
 fall2$ACE3.1 <- ifelse( fall2$ACE3.1 == 5, 1, 0 )
@@ -56,12 +67,12 @@ fall2$ACE13.1 <- ifelse( fall2$ACE13.1 == 1, 1, 0 )
 fall2$ACE14.1 <- ifelse( fall2$ACE14.1 == 1, 1, 0 )
 fall2$ACE15.1 <- ifelse( fall2$ACE15.1 == 23, 1, 0 )
 
-# create cohort variable for post-merge
+### Create cohort variable for merging
 fall2$cohort <- 1
 
 
-### prep spring data for merging
-# subset necessary variables from data files
+### Prep spring data for merging
+### Subset necessary variables
 names( spring )
 spring2 <- spring %>% select( ID, Duration.M, Age, Sex, Race1, Race2, Race3, Race4, 
                           Race5, Race6, Race7, Race8, Race_Other, ses1, ses2, 
@@ -75,20 +86,20 @@ spring2 <- spring %>% select( ID, Duration.M, Age, Sex, Race1, Race2, Race3, Rac
                           COVID2, COVID3, COVID4, COVID5, COVID6, COVID7, 
                           COVID8, COVID9 )
 
-# recode sex
+### Recode sex
 spring2$m0f1 <- ifelse( spring2$Sex == 2, 0, spring2$Sex )
 table( spring2$m0f1, exclude = NULL )
 #  0 (male)   1 (female)
 #    85           279 
 
-# recode race
+### Recode race (see codes above)
 spring2$Race.b <- ifelse( spring2$Race7 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) & is.na( spring2$Race3 ) & 
                           is.na( spring2$Race4 ) & is.na( spring2$Race5 ) & is.na( spring2$Race6 ) & is.na( spring2$Race8 ), 1, 0 )
 table( spring2$Race.b, exclude = NULL )
-#  0 (other)   1 (white)
+#  0 (other)   1 (Caucasian/European American)
 #     257         107 
 
-# recode ACEs
+### Recode ACEs
 spring2$ACE1.1 <- ifelse( spring2$ACE1.1 == 5, 1, 0 )
 spring2$ACE2.1 <- ifelse( spring2$ACE2.1 == 5, 1, 0 )
 spring2$ACE3.1 <- ifelse( spring2$ACE3.1 == 5, 1, 0 )
@@ -103,240 +114,274 @@ spring2$ACE11.1 <- ifelse( spring2$ACE11.1 == 5, 1, 0 )
 spring2$ACE12.1 <- ifelse( spring2$ACE12.1 == 23, 1, 0 )
 spring2$ACE13.1 <- ifelse( spring2$ACE13.1 == 1, 1, 0 )
 spring2$ACE14.1 <- ifelse( spring2$ACE14.1 == 1, 1, 0 )
-spring2$ACE15.1 <- ifelse( spring2$ACE15.1 == 23, 1, 0 )
+spring2$ACE15.1 <- ifelse( spring2$ACE15.1 == 24, 1, 0 )
 
-# create cohort variable for post-merge
+### Create cohort variable for merging
 spring2$cohort <- 2
 
-# check if column names match
-#stopifnot( identical( colnames( fall2 ), colnames( spring2 ) ) )
+### Check if column names match
+stopifnot( identical( colnames( fall2 ), colnames( spring2 ) ) )
 # COVID items not in fall cohort
 
-# merge tibbles
-fall.spring <- bind_rows( fall2[ 1:261, 1:64 ], spring2[ 1:364, 1:73 ] )
+### Merge tibbles
+df1 <- bind_rows( fall2[ 1:261, 1:64 ], spring2[ 1:364, 1:73 ] )
+
+### Clean up environment
+rm( list = c( "fall", "fall2", "spring", "spring2" ) )
+
+# Study specific variables ready for QC #
+################################################################################
 
 
-###########################
-## Cleaning outcome vars ##
-###########################
+#################################
+## Participant inclusion check ##
+#################################
 
-# create GAD-7 total scores
-fall.spring$GAD7tot <- fall.spring$GAD1 + fall.spring$GAD2 + fall.spring$GAD3 +
-  fall.spring$GAD4 + fall.spring$GAD5 + fall.spring$GAD6 + fall.spring$GAD7
+### Check for and remove older (i.e. non-traditional) college students
+table( df1$Age ) 
 
-# check reliability
-GAD <- fall.spring[ ,c( 46:52 ) ]
-psych::alpha( GAD ) # .89
+### Remove individuals over age 24 (n = 13)
+### Justification: 25+ traditionally used to define "non-traditional" college students 
+### See: (https://nces.ed.gov/pubs/web/97578e.asp)
+df1 <- df1[ which( df1$Age < 25 ), ]
 
-# update GAD scoring
-# should be 4-point Likert (not at all, several days, more than half the days, every day)
-# we have a 6-point Likert (Never, Almost never, Once in a while, Some days, Most days, Every day)
-fall.spring$GAD1.r <- ifelse( fall.spring$GAD1 < 3, 0, fall.spring$GAD1 )
-fall.spring$GAD1.r <- ifelse( fall.spring$GAD1 == 3 | fall.spring$GAD1 == 4, 1, fall.spring$GAD1.r )
-fall.spring$GAD1.r <- ifelse( fall.spring$GAD1 == 5, 2, fall.spring$GAD1.r )
-fall.spring$GAD1.r <- ifelse( fall.spring$GAD1 == 6, 3, fall.spring$GAD1.r )
-
-fall.spring$GAD2.r <- ifelse( fall.spring$GAD2 < 3, 0, fall.spring$GAD2 )
-fall.spring$GAD2.r <- ifelse( fall.spring$GAD2 == 3 | fall.spring$GAD2 == 4, 1, fall.spring$GAD2.r )
-fall.spring$GAD2.r <- ifelse( fall.spring$GAD2 == 5, 2, fall.spring$GAD2.r )
-fall.spring$GAD2.r <- ifelse( fall.spring$GAD2 == 6, 3, fall.spring$GAD2.r )
-
-fall.spring$GAD3.r <- ifelse( fall.spring$GAD3 < 3, 0, fall.spring$GAD3 )
-fall.spring$GAD3.r <- ifelse( fall.spring$GAD3 == 3 | fall.spring$GAD3 == 4, 1, fall.spring$GAD3.r )
-fall.spring$GAD3.r <- ifelse( fall.spring$GAD3 == 5, 2, fall.spring$GAD3.r )
-fall.spring$GAD3.r <- ifelse( fall.spring$GAD3 == 6, 3, fall.spring$GAD3.r )
-
-fall.spring$GAD4.r <- ifelse( fall.spring$GAD4 < 3, 0, fall.spring$GAD4 )
-fall.spring$GAD4.r <- ifelse( fall.spring$GAD4 == 3 | fall.spring$GAD4 == 4, 1, fall.spring$GAD4.r )
-fall.spring$GAD4.r <- ifelse( fall.spring$GAD4 == 5, 2, fall.spring$GAD4.r )
-fall.spring$GAD4.r <- ifelse( fall.spring$GAD4 == 6, 3, fall.spring$GAD4.r )
-
-fall.spring$GAD5.r <- ifelse( fall.spring$GAD5 < 3, 0, fall.spring$GAD5 )
-fall.spring$GAD5.r <- ifelse( fall.spring$GAD5 == 3 | fall.spring$GAD5 == 4, 1, fall.spring$GAD5.r )
-fall.spring$GAD5.r <- ifelse( fall.spring$GAD5 == 5, 2, fall.spring$GAD5.r )
-fall.spring$GAD5.r <- ifelse( fall.spring$GAD5 == 6, 3, fall.spring$GAD5.r )
-
-fall.spring$GAD6.r <- ifelse( fall.spring$GAD6 < 3, 0, fall.spring$GAD6 )
-fall.spring$GAD6.r <- ifelse( fall.spring$GAD6 == 3 | fall.spring$GAD6 == 4, 1, fall.spring$GAD6.r )
-fall.spring$GAD6.r <- ifelse( fall.spring$GAD6 == 5, 2, fall.spring$GAD6.r )
-fall.spring$GAD6.r <- ifelse( fall.spring$GAD6 == 6, 3, fall.spring$GAD6.r )
-
-fall.spring$GAD7.r <- ifelse( fall.spring$GAD7 < 3, 0, fall.spring$GAD7 )
-fall.spring$GAD7.r <- ifelse( fall.spring$GAD7 == 3 | fall.spring$GAD7 == 4, 1, fall.spring$GAD7.r )
-fall.spring$GAD7.r <- ifelse( fall.spring$GAD7 == 5, 2, fall.spring$GAD7.r )
-fall.spring$GAD7.r <- ifelse( fall.spring$GAD7 == 6, 3, fall.spring$GAD7.r )
+### Look at study duration
+psych::describe( df1$Duration.M )
+### Long study duration for some participants, but that's OK
+### However, may want to conduct sensitivity analysis
+### excluding those who took <= 20 (?) minutes
+sum( df1$Duration.M > 20 )
 
 
-# create revised GAD-7 total scores
-fall.spring$GAD7.rtot <- fall.spring$GAD1.r + fall.spring$GAD2.r + fall.spring$GAD3.r +
-  fall.spring$GAD4.r + fall.spring$GAD5.r + fall.spring$GAD6.r + fall.spring$GAD7.r
+################################################################################
 
-# check reliability
-GAD.r <- fall.spring[ ,c( 75:81 ) ]
-psych::alpha( GAD.r ) # .87
+###################################
+##   Cleaning outcome variables  ##
+## Anxiety & Depressive Symptoms ##
+###################################
 
-# create clinical cut-offs
-fall.spring$GAD.clinical <- cut(
-  fall.spring$GAD7.rtot,
+### Create GAD-7 total scores
+df1$GAD7tot <- df1$GAD1 + df1$GAD2 + df1$GAD3 + df1$GAD4 + df1$GAD5 + df1$GAD6 + df1$GAD7
+
+### Check reliability
+psych::alpha( df1[ ,c( 46:52 ) ] ) # .89
+
+### Update GAD scoring
+### Should be 4-point Likert (not at all, several days, more than half the days, every day)
+### We (accidentally) have a 6-point Likert (Never, Almost never, Once in a while, Some days, Most days, Every day)
+df1$GAD1.r <- ifelse( df1$GAD1 < 3, 0, df1$GAD1 )
+df1$GAD1.r <- ifelse( df1$GAD1 == 3 | df1$GAD1 == 4, 1, df1$GAD1.r )
+df1$GAD1.r <- ifelse( df1$GAD1 == 5, 2, df1$GAD1.r )
+df1$GAD1.r <- ifelse( df1$GAD1 == 6, 3, df1$GAD1.r )
+
+df1$GAD2.r <- ifelse( df1$GAD2 < 3, 0, df1$GAD2 )
+df1$GAD2.r <- ifelse( df1$GAD2 == 3 | df1$GAD2 == 4, 1, df1$GAD2.r )
+df1$GAD2.r <- ifelse( df1$GAD2 == 5, 2, df1$GAD2.r )
+df1$GAD2.r <- ifelse( df1$GAD2 == 6, 3, df1$GAD2.r )
+
+df1$GAD3.r <- ifelse( df1$GAD3 < 3, 0, df1$GAD3 )
+df1$GAD3.r <- ifelse( df1$GAD3 == 3 | df1$GAD3 == 4, 1, df1$GAD3.r )
+df1$GAD3.r <- ifelse( df1$GAD3 == 5, 2, df1$GAD3.r )
+df1$GAD3.r <- ifelse( df1$GAD3 == 6, 3, df1$GAD3.r )
+
+df1$GAD4.r <- ifelse( df1$GAD4 < 3, 0, df1$GAD4 )
+df1$GAD4.r <- ifelse( df1$GAD4 == 3 | df1$GAD4 == 4, 1, df1$GAD4.r )
+df1$GAD4.r <- ifelse( df1$GAD4 == 5, 2, df1$GAD4.r )
+df1$GAD4.r <- ifelse( df1$GAD4 == 6, 3, df1$GAD4.r )
+
+df1$GAD5.r <- ifelse( df1$GAD5 < 3, 0, df1$GAD5 )
+df1$GAD5.r <- ifelse( df1$GAD5 == 3 | df1$GAD5 == 4, 1, df1$GAD5.r )
+df1$GAD5.r <- ifelse( df1$GAD5 == 5, 2, df1$GAD5.r )
+df1$GAD5.r <- ifelse( df1$GAD5 == 6, 3, df1$GAD5.r )
+
+df1$GAD6.r <- ifelse( df1$GAD6 < 3, 0, df1$GAD6 )
+df1$GAD6.r <- ifelse( df1$GAD6 == 3 | df1$GAD6 == 4, 1, df1$GAD6.r )
+df1$GAD6.r <- ifelse( df1$GAD6 == 5, 2, df1$GAD6.r )
+df1$GAD6.r <- ifelse( df1$GAD6 == 6, 3, df1$GAD6.r )
+
+df1$GAD7.r <- ifelse( df1$GAD7 < 3, 0, df1$GAD7 )
+df1$GAD7.r <- ifelse( df1$GAD7 == 3 | df1$GAD7 == 4, 1, df1$GAD7.r )
+df1$GAD7.r <- ifelse( df1$GAD7 == 5, 2, df1$GAD7.r )
+df1$GAD7.r <- ifelse( df1$GAD7 == 6, 3, df1$GAD7.r )
+
+### Create revised GAD-7 total scores
+df1$GAD7.rtot <- df1$GAD1.r + df1$GAD2.r + df1$GAD3.r + df1$GAD4.r + 
+  df1$GAD5.r + df1$GAD6.r + df1$GAD7.r
+
+### Check reliability
+psych::alpha( df1[ ,c( 75:81 ) ] ) # .87
+
+### Create clinical cut-offs
+df1$GAD.clinical <- cut(
+  df1$GAD7.rtot,
   breaks = c( 0, 5, 10, 15, Inf ),
-  labels = c( "minimal", "mild", "moderate", "severe" ),
+  labels = c( "Minimal", "Mild", "Moderate", "Severe" ),
   right  = FALSE
 )
 
-table( fall.spring$GAD.clinical )
-prop.table( table( fall.spring$GAD.clinical ) )*100
+table( df1$GAD.clinical )
+prop.table( table( df1$GAD.clinical ) )*100
 
 
-# create PHQ-9 total scores
-fall.spring$PHQtot <- fall.spring$PHQ1 + fall.spring$PHQ2 + fall.spring$PHQ3 +
-  fall.spring$PHQ4 + fall.spring$PHQ5 + fall.spring$PHQ6 + fall.spring$PHQ7 + 
-  fall.spring$PHQ8 + fall.spring$PHQ9
+### Create PHQ-9 total scores
+df1$PHQtot <- df1$PHQ1 + df1$PHQ2 + df1$PHQ3 + df1$PHQ4 + df1$PHQ5 + df1$PHQ6 + 
+  df1$PHQ7 + df1$PHQ8 + df1$PHQ9
 
-# check reliability
-PHQ <- fall.spring[ ,c( 53:61 ) ]
-psych::alpha( PHQ ) # .90
+### Check reliability
+psych::alpha( df1[ ,c( 53:61 ) ] ) # .90
 
+### Update PHQ scoring
+### Should be 4-point Likert (not at all, several days, more than half the days, every day)
+### We (accidentally) have a 6-point Likert (Never, Almost never, Once in a while, Some days, Most days, Every day)
+df1$PHQ1.r <- ifelse( df1$PHQ1 < 3, 0, df1$PHQ1 )
+df1$PHQ1.r <- ifelse( df1$PHQ1 == 3 | df1$PHQ1 == 4, 1, df1$PHQ1.r )
+df1$PHQ1.r <- ifelse( df1$PHQ1 == 5, 2, df1$PHQ1.r )
+df1$PHQ1.r <- ifelse( df1$PHQ1 == 6, 3, df1$PHQ1.r )
 
-# update PHQ scoring
-# should be 4-point Likert (not at all, several days, more than half the days, every day)
-# we have a 6-point Likert (Never, Almost never, Once in a while, Some days, Most days, Every day)
-fall.spring$PHQ1.r <- ifelse( fall.spring$PHQ1 < 3, 0, fall.spring$PHQ1 )
-fall.spring$PHQ1.r <- ifelse( fall.spring$PHQ1 == 3 | fall.spring$PHQ1 == 4, 1, fall.spring$PHQ1.r )
-fall.spring$PHQ1.r <- ifelse( fall.spring$PHQ1 == 5, 2, fall.spring$PHQ1.r )
-fall.spring$PHQ1.r <- ifelse( fall.spring$PHQ1 == 6, 3, fall.spring$PHQ1.r )
+df1$PHQ2.r <- ifelse( df1$PHQ2 < 3, 0, df1$PHQ2 )
+df1$PHQ2.r <- ifelse( df1$PHQ2 == 3 | df1$PHQ2 == 4, 1, df1$PHQ2.r )
+df1$PHQ2.r <- ifelse( df1$PHQ2 == 5, 2, df1$PHQ2.r )
+df1$PHQ2.r <- ifelse( df1$PHQ2 == 6, 3, df1$PHQ2.r )
 
-fall.spring$PHQ2.r <- ifelse( fall.spring$PHQ2 < 3, 0, fall.spring$PHQ2 )
-fall.spring$PHQ2.r <- ifelse( fall.spring$PHQ2 == 3 | fall.spring$PHQ2 == 4, 1, fall.spring$PHQ2.r )
-fall.spring$PHQ2.r <- ifelse( fall.spring$PHQ2 == 5, 2, fall.spring$PHQ2.r )
-fall.spring$PHQ2.r <- ifelse( fall.spring$PHQ2 == 6, 3, fall.spring$PHQ2.r )
+df1$PHQ3.r <- ifelse( df1$PHQ3 < 3, 0, df1$PHQ3 )
+df1$PHQ3.r <- ifelse( df1$PHQ3 == 3 | df1$PHQ3 == 4, 1, df1$PHQ3.r )
+df1$PHQ3.r <- ifelse( df1$PHQ3 == 5, 2, df1$PHQ3.r )
+df1$PHQ3.r <- ifelse( df1$PHQ3 == 6, 3, df1$PHQ3.r )
 
-fall.spring$PHQ3.r <- ifelse( fall.spring$PHQ3 < 3, 0, fall.spring$PHQ3 )
-fall.spring$PHQ3.r <- ifelse( fall.spring$PHQ3 == 3 | fall.spring$PHQ3 == 4, 1, fall.spring$PHQ3.r )
-fall.spring$PHQ3.r <- ifelse( fall.spring$PHQ3 == 5, 2, fall.spring$PHQ3.r )
-fall.spring$PHQ3.r <- ifelse( fall.spring$PHQ3 == 6, 3, fall.spring$PHQ3.r )
+df1$PHQ4.r <- ifelse( df1$PHQ4 < 3, 0, df1$PHQ4 )
+df1$PHQ4.r <- ifelse( df1$PHQ4 == 3 | df1$PHQ4 == 4, 1, df1$PHQ4.r )
+df1$PHQ4.r <- ifelse( df1$PHQ4 == 5, 2, df1$PHQ4.r )
+df1$PHQ4.r <- ifelse( df1$PHQ4 == 6, 3, df1$PHQ4.r )
 
-fall.spring$PHQ4.r <- ifelse( fall.spring$PHQ4 < 3, 0, fall.spring$PHQ4 )
-fall.spring$PHQ4.r <- ifelse( fall.spring$PHQ4 == 3 | fall.spring$PHQ4 == 4, 1, fall.spring$PHQ4.r )
-fall.spring$PHQ4.r <- ifelse( fall.spring$PHQ4 == 5, 2, fall.spring$PHQ4.r )
-fall.spring$PHQ4.r <- ifelse( fall.spring$PHQ4 == 6, 3, fall.spring$PHQ4.r )
+df1$PHQ5.r <- ifelse( df1$PHQ5 < 3, 0, df1$PHQ5 )
+df1$PHQ5.r <- ifelse( df1$PHQ5 == 3 | df1$PHQ5 == 4, 1, df1$PHQ5.r )
+df1$PHQ5.r <- ifelse( df1$PHQ5 == 5, 2, df1$PHQ5.r )
+df1$PHQ5.r <- ifelse( df1$PHQ5 == 6, 3, df1$PHQ5.r )
 
-fall.spring$PHQ5.r <- ifelse( fall.spring$PHQ5 < 3, 0, fall.spring$PHQ5 )
-fall.spring$PHQ5.r <- ifelse( fall.spring$PHQ5 == 3 | fall.spring$PHQ5 == 4, 1, fall.spring$PHQ5.r )
-fall.spring$PHQ5.r <- ifelse( fall.spring$PHQ5 == 5, 2, fall.spring$PHQ5.r )
-fall.spring$PHQ5.r <- ifelse( fall.spring$PHQ5 == 6, 3, fall.spring$PHQ5.r )
+df1$PHQ6.r <- ifelse( df1$PHQ6 < 3, 0, df1$PHQ6 )
+df1$PHQ6.r <- ifelse( df1$PHQ6 == 3 | df1$PHQ6 == 4, 1, df1$PHQ6.r )
+df1$PHQ6.r <- ifelse( df1$PHQ6 == 5, 2, df1$PHQ6.r )
+df1$PHQ6.r <- ifelse( df1$PHQ6 == 6, 3, df1$PHQ6.r )
 
-fall.spring$PHQ6.r <- ifelse( fall.spring$PHQ6 < 3, 0, fall.spring$PHQ6 )
-fall.spring$PHQ6.r <- ifelse( fall.spring$PHQ6 == 3 | fall.spring$PHQ6 == 4, 1, fall.spring$PHQ6.r )
-fall.spring$PHQ6.r <- ifelse( fall.spring$PHQ6 == 5, 2, fall.spring$PHQ6.r )
-fall.spring$PHQ6.r <- ifelse( fall.spring$PHQ6 == 6, 3, fall.spring$PHQ6.r )
+df1$PHQ7.r <- ifelse( df1$PHQ7 < 3, 0, df1$PHQ7 )
+df1$PHQ7.r <- ifelse( df1$PHQ7 == 3 | df1$PHQ7 == 4, 1, df1$PHQ7.r )
+df1$PHQ7.r <- ifelse( df1$PHQ7 == 5, 2, df1$PHQ7.r )
+df1$PHQ7.r <- ifelse( df1$PHQ7 == 6, 3, df1$PHQ7.r )
 
-fall.spring$PHQ7.r <- ifelse( fall.spring$PHQ7 < 3, 0, fall.spring$PHQ7 )
-fall.spring$PHQ7.r <- ifelse( fall.spring$PHQ7 == 3 | fall.spring$PHQ7 == 4, 1, fall.spring$PHQ7.r )
-fall.spring$PHQ7.r <- ifelse( fall.spring$PHQ7 == 5, 2, fall.spring$PHQ7.r )
-fall.spring$PHQ7.r <- ifelse( fall.spring$PHQ7 == 6, 3, fall.spring$PHQ7.r )
+df1$PHQ8.r <- ifelse( df1$PHQ8 < 3, 0, df1$PHQ8 )
+df1$PHQ8.r <- ifelse( df1$PHQ8 == 3 | df1$PHQ8 == 4, 1, df1$PHQ8.r )
+df1$PHQ8.r <- ifelse( df1$PHQ8 == 5, 2, df1$PHQ8.r )
+df1$PHQ8.r <- ifelse( df1$PHQ8 == 6, 3, df1$PHQ8.r )
 
-fall.spring$PHQ8.r <- ifelse( fall.spring$PHQ8 < 3, 0, fall.spring$PHQ8 )
-fall.spring$PHQ8.r <- ifelse( fall.spring$PHQ8 == 3 | fall.spring$PHQ8 == 4, 1, fall.spring$PHQ8.r )
-fall.spring$PHQ8.r <- ifelse( fall.spring$PHQ8 == 5, 2, fall.spring$PHQ8.r )
-fall.spring$PHQ8.r <- ifelse( fall.spring$PHQ8 == 6, 3, fall.spring$PHQ8.r )
+df1$PHQ9.r <- ifelse( df1$PHQ9 < 3, 0, df1$PHQ9 )
+df1$PHQ9.r <- ifelse( df1$PHQ9 == 3 | df1$PHQ9 == 4, 1, df1$PHQ9.r )
+df1$PHQ9.r <- ifelse( df1$PHQ9 == 5, 2, df1$PHQ9.r )
+df1$PHQ9.r <- ifelse( df1$PHQ9 == 6, 3, df1$PHQ9.r )
 
-fall.spring$PHQ9.r <- ifelse( fall.spring$PHQ9 < 3, 0, fall.spring$PHQ9 )
-fall.spring$PHQ9.r <- ifelse( fall.spring$PHQ9 == 3 | fall.spring$PHQ9 == 4, 1, fall.spring$PHQ9.r )
-fall.spring$PHQ9.r <- ifelse( fall.spring$PHQ9 == 5, 2, fall.spring$PHQ9.r )
-fall.spring$PHQ9.r <- ifelse( fall.spring$PHQ9 == 6, 3, fall.spring$PHQ9.r )
+### Create revised PHQ-9 total scores
+df1$PHQ9.rtot <- df1$PHQ1.r + df1$PHQ2.r + df1$PHQ3.r + df1$PHQ4.r + df1$PHQ5.r + 
+  df1$PHQ6.r + df1$PHQ7.r + df1$PHQ8.r + df1$PHQ9.r
 
+### Check reliability
+psych::alpha( df1[ ,c( 85:93 ) ] ) # .89
 
-# create revised PHQ-9 total scores
-fall.spring$PHQ9.rtot <- fall.spring$PHQ1.r + fall.spring$PHQ2.r + fall.spring$PHQ3.r +
-  fall.spring$PHQ4.r + fall.spring$PHQ5.r + fall.spring$PHQ6.r + fall.spring$PHQ7.r +
-  fall.spring$PHQ8.r + fall.spring$PHQ9.r
-
-# check reliability
-PHQ.r <- fall.spring[ ,c( 85:93 ) ]
-psych::alpha( PHQ.r ) # .89
-
-# create clinical cut-offs
-fall.spring$PHQ.clinical <- cut(
-  fall.spring$PHQ9.rtot,
+### Create clinical cut-offs
+df1$PHQ.clinical <- cut(
+  df1$PHQ9.rtot,
   breaks = c( 0, 5, 10, 15, Inf ),
-  labels = c( "minimal", "mild", "moderate", "severe" ),
+  labels = c( "Minimal", "Mild", "Moderate", "Severe" ),
   right  = FALSE
 )
 
-table( fall.spring$PHQ.clinical )
-prop.table( table( fall.spring$PHQ.clinical ) )*100
+table( df1$PHQ.clinical )
+prop.table( table( df1$PHQ.clinical ) )*100
 
 
-# clean up environment
-df1 <- fall.spring
-rm( list = c( "fall", "fall.spring", "fall2", "GAD", "GAD.r", "PHQ", "PHQ.r",
-              "spring", "spring2" ) )
+### Visualize data
+ggplot( df1, aes( x = as.factor( GAD.clinical ), fill = as.factor( GAD.clinical ) ) ) + 
+  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
+  scale_fill_brewer( palette = "Set2" ) +
+  theme( legend.position = "none" ) + ggtitle( "Bar Chart of GAD-7 Clinical Cut-offs" ) +
+  xlab( "Clinical Cut-off" ) + ylab( "Frequency" )
+
+ggplot( df1, aes( x = as.factor( PHQ.clinical ), fill = as.factor( PHQ.clinical ) ) ) + 
+  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
+  scale_fill_brewer( palette = "Set2" ) +
+  theme( legend.position = "none" ) + ggtitle( "Bar Chart of PHQ-9 Clinical Cut-offs" ) +
+  xlab( "Clinical Cut-off" ) + ylab( "Frequency" )
+
+### Are anxiety and depressive symptoms correlated?
+cor.test( df1$GAD7.rtot, df1$PHQ9.rtot )
+# Yes, strongly
+
+# Outcome variables cleaned #
+################################################################################
 
 
-###########################
-## Cleaning ACE variable ##
-###########################
+###################################
+##          Predictors           ##
+## Adverse Childhood Experiences ##
+#   Perceived Negative Effect    ##
+###################################
 
-# Create cumulative ACE score
-ACE.sum <- df1[ ,c( 1,64,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44 ) ]
+### Create cumulative ACE score
+ACES <- df1 %>% select( ID, cohort, ACE1.1, ACE2.1, ACE3.1, ACE4.1, ACE5.1, 
+                           ACE6.1, ACE7.1, ACE8.1, ACE9.1, ACE10.1, ACE11.1, 
+                           ACE12.1, ACE13.1, ACE14.1, ACE15.1 )
 
-# create summary score
-ACE.sum$ACE.count <- rowSums( ACE.sum[ ,3:17 ] )
+### Create summary score
+ACES$ACE.count <- rowSums( ACES[ ,3:17 ] )
 
-# describe ACE summary score
-library( psych )
-describe( ACE.sum$ACE.count )
-table( ACE.sum$ACE.count )
+### Describe ACE summary score
+psych::describe( ACES$ACE.count )
+table( ACES$ACE.count )
 
-# plot data - full sample
-p <- ggplot( ACE.sum, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( ) +
+### Visualize data - full sample
+ggplot( ACES, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( ) +
   geom_text( stat = "count", aes( label = ..count.., vjust = -1 ) ) + 
   theme( legend.position = "none", panel.border = element_blank(), panel.grid.major = element_blank(), 
          panel.grid.minor = element_blank(), axis.line = element_line( colour = "black" ), 
          panel.background = element_rect( fill = "transparent" ), 
          plot.background = element_rect( fill = "transparent", color = NA ) ) + 
-  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,11,1 ) ) + 
+  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,13,1 ) ) + 
   scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) )
-p
-#ggsave( p, filename = "ACE_Frequency_All.png", bg = "transparent" )
 
 
-# facet for separate cohorts
-ACE.sum$cohort <- factor( ACE.sum$cohort, levels = c( 1, 2 ), labels = c( "Fall", "Spring" ) )
-p2 <- ggplot( ACE.sum, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( ) +
+### Facet for separate cohorts
+ACES$cohort <- factor( ACES$cohort, levels = c( 1, 2 ), labels = c( "Fall", "Spring" ) )
+ggplot( ACES, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( ) +
   geom_text( stat = "count", aes( label = ..count.., vjust = -1 ) ) + 
   theme( legend.position = "none", panel.border = element_blank(), panel.grid.major = element_blank(), 
          panel.grid.minor = element_blank(), axis.line = element_line( colour = "black" ), 
          panel.background = element_rect( fill = "transparent" ), 
          plot.background = element_rect( fill = "transparent", color = NA ) ) + 
-  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,11,1 ) ) + 
-  scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) )
-p2 <- p + facet_grid( . ~ cohort )
-p2
-#ggsave( p2, filename = "ACE_Frequency_by_Cohort.png", bg = "transparent" )
+  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,13,1 ) ) + 
+  scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) ) + 
+  facet_grid( . ~ cohort )
+
+### Merge ACE data with full data set
+ACES <- ACES[ ,c( 1, 18 ) ]
+df2 <- merge( df1, ACES, by = "ID" )
 
 
+### Look at perceptions data
+ACE.percep <- df2 %>% select( ID, cohort, ACE1.5, ACE2.5, ACE3.5, ACE4.5, ACE5.5, 
+                              ACE6.5, ACE7.5, ACE8.5, ACE9.5, ACE10.5, ACE11.5, 
+                              ACE12.5, ACE13.5, ACE14.5, ACE15.5 )
+names( ACE.percep ) <- c( "ID", "Cohort", "Alcohol", "Drugs", "PsychDx", 
+                          "Suicide", "Death", "Jail", "FamViolence", "Divorce",
+                          "SexAbuse", "PhysAbuse", "EmotAbuse", "Neglect",
+                          "Bully", "Discrim", "CommViolence" )
 
-# merge with full data set
-ACE.sum <- ACE.sum[ ,c( 1, 18 ) ]
-df2 <- merge( df1, ACE.sum, by = "ID" )
-
-# look at perceptions data
-ACE.percep <- df1[, c( 1,64,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45 ) ]
-names( ACE.percep ) <- c( "ID", "Cohort", "Alcohol", "Drugs", "Psych Dx", 
-                          "Suicide", "Death", "Jail", "Fam Violence", "Divorce",
-                          "Sex Abuse", "Phys Abuse", "Emot Abuse", "Neglect",
-                          "Bully", "Discrimination", "Comm Violence" )
- 
-# plot data
+### Visualize data
 ACE.percep.long <- ACE.percep %>%
   pivot_longer( 3:17, names_to = "question", values_to = "response" )
 
 library( plyr )
 means.all <- ddply( ACE.percep.long, .( question ), summarise, 
-                response = mean( response, na.rm = T ) )
+                    response = mean( response, na.rm = T ) )
 
-# full sample
+### Full sample
 ACE.percep %>%
   pivot_longer( 3:17, names_to = "question", values_to = "response" ) %>%
   ggplot( aes( y = response, x = question ) ) +
@@ -345,14 +390,14 @@ ACE.percep %>%
   geom_text( data = means.all, aes( x = question, y = response, label = round( response, digits = 2 ) ), 
              size = 3, vjust = 0 )
 
-# fall
+### Fall
 ACE.percep.fall <- ACE.percep[ which( ACE.percep$Cohort == 1 ), ]
 
 ACE.percep.fall.long <- ACE.percep.fall %>%
   pivot_longer( 3:17, names_to = "question", values_to = "response" )
 
 means.fall <- ddply( ACE.percep.fall.long, .( question ), summarise, 
-                response = mean( response, na.rm = T ) )
+                     response = mean( response, na.rm = T ) )
 
 ACE.percep.fall %>%
   pivot_longer( 3:17, names_to = "question", values_to = "response" ) %>%
@@ -362,14 +407,14 @@ ACE.percep.fall %>%
   geom_text( data = means.fall, aes( x = question, y = response, label = round( response, digits = 2 ) ), 
              size = 3, vjust = 0 )
 
-# spring
+### Spring
 ACE.percep.spring <- ACE.percep[ which( ACE.percep$Cohort == 2 ), ]
 
 ACE.percep.spring.long <- ACE.percep.spring %>%
   pivot_longer( 3:17, names_to = "question", values_to = "response" )
 
 means.spring <- ddply( ACE.percep.spring.long, .( question ), summarise, 
-                     response = mean( response, na.rm = T ) )
+                       response = mean( response, na.rm = T ) )
 
 ACE.percep.spring %>%
   pivot_longer( 3:17, names_to = "question", values_to = "response" ) %>%
@@ -379,59 +424,164 @@ ACE.percep.spring %>%
   geom_text( data = means.spring, aes( x = question, y = response, label = round( response, digits = 2 ) ), 
              size = 3, vjust = 0 )
 
-# clean up environment
-rm( list = c( "p", "p2", "means.all", "means.fall", "means.spring", "ACE.sum", 
-              "ACE.percep", "ACE.percep.fall", "ACE.percep.fall.long", 
-              "ACE.percep.long", "ACE.percep.spring", "ACE.percep.spring.long", 
-              "df1" ) )
-
-# create ACE perceptions score
+### Create ACE perceptions score
 df2$ACE.percep <- rowMeans( 
   df2[ ,c( 17,19,21,23,25,27,29,31,33,35,37,39,41,43,45 ) ], na.rm = T )
 df2$ACE.percep <- ifelse( is.nan( df2$ACE.percep ), NA, df2$ACE.percep )
-describe( df2$ACE.percep )
+psych::describe( df2$ACE.percep )
 
-# plot perception scores
-df3 <- df2[ which( !is.na( df2$ACE.percep ) ), ]
-p <- ggplot( df3, aes( x = ACE.percep ) ) + 
-  geom_histogram( color = "darkblue", fill = "lightblue" )
+### Visualize perception scores
+df3 <- df2[ which( !is.na( df2$ACE.percep ) ), ] # remove NA for plotting
+ggplot( df3, aes( x = ACE.percep ) ) + geom_histogram( color = "darkblue", fill = "lightblue" ) + 
+  geom_vline( aes( xintercept = mean( ACE.percep ) ), color = "blue", linetype = "dashed", size = 1 )
 
-p + geom_vline( aes( xintercept = mean( ACE.percep ) ),
-              color = "blue", linetype = "dashed", size = 1 )
+### Facet by cohort
+df3$cohort <- df3$cohort <- factor( df3$cohort, levels = c( 1, 2 ), labels = c( "Fall", "Spring" ) )
+ggplot( df3, aes( x = ACE.percep ) ) + geom_histogram( color = "darkblue", fill = "lightblue" ) + 
+  geom_vline( aes( xintercept = mean( ACE.percep ) ), color = "blue", linetype = "dashed", size = 1 ) +
+  facet_grid( . ~ cohort )
+
+### Clean up environment
+rm( list = c( "means.all", "means.fall", "means.spring", "ACES", 
+              "ACE.percep", "ACE.percep.fall", "ACE.percep.fall.long", 
+              "ACE.percep.long", "ACE.percep.spring", "ACE.percep.spring.long", 
+              "df1", "df3" ) )
+
+# Predictor varialbes cleaned #
+################################################################################
+
+################
+## Covariates ##
+################
+
+### Socioeconomic status (while growing up)
+#In terms of finances, which of the following best describes you/your family's 
+#situation prior to age 18? Would you say you/your family had:
+
+#A lot more money than you need; A little more money than you need
+#Just enough to meet your needs; Not enough to meet your needs
+table( df2$ses1 )
 
 
-# remove individuals not of typical college age
-table( df2$Age ) # remove individuals over age 22 (n = 25)
-df2 <- df2[ which( df2$Age < 23 ), ]
+#In terms of finances, which of the following best describes you/your family’s 
+#situation prior to age 18 compared to other families?  Would you say you/your family was:
+
+#Better off than most other families; About the same as most other families;
+#Worse off than most other families
+table( df2$ses2 ) 
+
+df2$ses1.f <- factor( df2$ses1, levels = c( 1, 2, 3, 4 ), labels = c( "A lot more money than needed", 
+                                                                    "A little more money than needed",
+                                                                    "Just enough to meet needs",
+                                                                    "Not enough to meet needs" ) )
+
+df2$ses2.f <- factor( df2$ses2, levels = c( 1, 2, 3 ), labels = c( "Better off than most families", 
+                                                                    "About the same as most families",
+                                                                    "Worse off than most families" ) )
+
+### Visualize data
+ggplot( df2, aes( x = as.factor( ses1.f ), fill = as.factor( ses1.f ) ) ) + 
+  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
+  scale_fill_brewer( palette = "Set2" ) +
+  theme( legend.position = "none" ) + ggtitle( "Family Finances When Growing Up" ) +
+  xlab( "Response" ) + ylab( "Frequency" )
+
+ggplot( df2, aes( x = as.factor( ses2.f ), fill = as.factor( ses2.f ) ) ) + 
+  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
+  scale_fill_brewer( palette = "Set2" ) +
+  theme( legend.position = "none" ) + ggtitle( "Family Situation When Growing Up" ) +
+  xlab( "Response" ) + ylab( "Frequency" )
 
 
-# examine correlations among study variables
+### COVID items (available in spring cohort only)
+#1. How much has the COVID-19 pandemic impacted your feelings of anxiety?
+#2. How much has the COVID-19 pandemic impacted your feelings of depression?
+#Response Options: Made it a lot better; Made it a little better; Didn't really change;
+# Made it a little worse; Made it a lot worse
+
+#Anxiety
+table( df2$COVID5 )
+
+#Depression
+table( df2$COVID6 )
+
+### Visualize responses
+df2$COVID5.f <- factor( df2$COVID5, levels = c( 1, 2, 3, 4, 5 ), labels = c( "Made it a lot better", 
+                                                                           "Made it a little better",
+                                                                           "Didn't really change", 
+                                                                           "Made it a little worse",
+                                                                           "Made it a lot worse" ) )
+
+df2$COVID6.f <- factor( df2$COVID6, levels = c( 1, 2, 3, 4, 5 ), labels = c( "Made it a lot better", 
+                                                                           "Made it a little better",
+                                                                           "Didn't really change", 
+                                                                           "Made it a little worse",
+                                                                           "Made it a lot worse" ) )
+temp <- df2[ which( !is.na( df2$COVID5 ) ), ]
+
+ggplot( temp, aes( x = as.factor( COVID5.f ), fill = as.factor( COVID5.f ) ) ) + 
+  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
+  scale_fill_brewer( palette = "Set2" ) +
+  theme( legend.position = "none" ) + ggtitle( "COVID-19 Effects on Anxiety" ) +
+  xlab( "Response" ) + ylab( "Frequency" )
+
+ggplot( temp, aes( x = as.factor( COVID6.f ), fill = as.factor( COVID6.f ) ) ) + 
+  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
+  scale_fill_brewer( palette = "Set2" ) +
+  theme( legend.position = "none" ) + ggtitle( "COVID-19 Effects on Depression" ) +
+  xlab( "Response" ) + ylab( "Frequency" )
+
+### Clean up environment
+rm( list = c( "df3", "temp" ) )
+
+# Covariates cleaned #
+################################################################################
+
+##############################
+## Extra data visualization ##
+##############################
+
+### Examine correlations among study variables
+### Use revised scoring versions of PHQ9 and GAD7
 library( Hmisc )
-cors <- df2[ ,c( "ACE.count", "ACE.percep", "Age", "PHQ9.rtot", "GAD7.rtot",
-                 "Race.b", "m0f1", "ses1" ) ]
-x <- rcorr( as.matrix( cors ) )
 
-flattenCorrMatrix <- function( cormat, pmat ) {
-  ut <- upper.tri( cormat )
-  data.frame(
-    row = rownames( cormat )[ row( cormat )[ ut ] ],
-    column = rownames( cormat )[ col( cormat )[ ut ] ],
-    cor  = ( cormat )[ ut ],
-    p = pmat[ ut ]
-  )
+### Function for heat map
+cors <- function( df ) { 
+  M <- Hmisc::rcorr( as.matrix( df ) )
+  Mdf <- map( M, ~data.frame( .x ) )
 }
 
-flattenCorrMatrix( x$r, x$P )
+### Subset variables
+corrs <- df2[ ,c( "ACE.count", "ACE.percep", "Age", "PHQ9.rtot", "GAD7.rtot",
+                 "Race.b", "m0f1", "ses1", "ses2", "COVID5", "COVID6" ) ]
+names( corrs ) <- c( "ACE_Score", "Perceived_Effect", "Age", "PHQ-9", "GAD-7", 
+                     "Race", "Sex", "Family_Finances", "Family_Situation", 
+                     "COVID_Anxiety", "COVID_Depression" )
 
-# make it better to look at
-library( corrplot )
-source( "http://www.sthda.com/upload/rquery_cormat.r" )
-x2 <- cor( cors, use = "pairwise.complete.obs" )
-corrplot( x2, type = "lower", sig.level = 0.05 )
+### Generate Heatmap
+cors( corrs ) %>%
+  map( ~rownames_to_column( .x, var = "measure1" ) ) %>%
+  # format each data set (r,P,n) long 
+  map( ~pivot_longer( .x, -measure1, "measure2" ) ) %>%
+  # merge our three list elements by binding the rows
+  bind_rows( .id = "id" ) %>%
+  pivot_wider( names_from = id, values_from = value ) %>%
+  mutate( sig_p = ifelse( P <.05, T, F ), p_if_sig = ifelse( P <.05, P, NA ),
+          r_if_sig = ifelse( P <.05, r, NA ) ) %>% 
+  ggplot( aes( measure1, measure2, fill = r, label = round( r_if_sig, 2 ) ) ) +
+  geom_tile() +
+  labs( x = NULL, y = NULL, fill = "Pearson's\nCorrelation", 
+        title = "Heatmap of Core Study Variables", 
+        subtitle = "Only significant Pearson's correlation coefficients shown" ) + 
+  scale_fill_gradient2( mid = "#FBFEF9", low = "#0C6291", high = "#A63446", 
+                        limits = c( -1,1 ) ) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete( expand = c( 0,0 ) ) +
+  scale_y_discrete( expand = c( 0,0 ) ) +
+  theme( text = element_text( family = "Times", size = 18 ) ) +
+  theme( axis.text.x = element_text( angle = -45, margin = margin( 0,0,0,0 ), hjust = .05, vjust = .5 ) )
 
-# clean up environment
-rm( list = c( "cors", "x", "x2", "flattenCorrMatrix", "rquery.cormat" ) )
-
-# write out merged and cleaned file
-write_csv( df2, file = "/Users/david/Desktop/aim_study/perceptions_ms/perceptions_fall_spring_cleaned.csv" )
+### Wrrite out file for analysis
+write_csv( df2, file = "data_for_analysis.csv" )
 
