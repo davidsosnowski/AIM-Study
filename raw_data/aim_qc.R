@@ -1,20 +1,20 @@
 ########################################
 # ACEs, Identity & Morality (AIM) Study
-# Data Preparation and QC
+# Cleaning raw data for sharing
 # Author: David W. Sosnowski
 # Email: dsosnow1@jhu.edu
 ########################################
 
 getwd()
 
-# load necessary packages
+### Load necessary packages
 library( haven )
 library( psych )
 library( tidyverse )
 
-# import data
-fall <- read_sav( "AIM Data Fall Original.sav" )
-spring <- read_sav( "AIM Data Spring.sav" )
+### Import data
+fall <- read_sav( "AIM_Data_Fall.sav" )
+spring <- read_sav( "AIM_Data_Spring.sav" )
 
 
 
@@ -22,14 +22,20 @@ spring <- read_sav( "AIM Data Spring.sav" )
                           ### QC of Fall data ###
                           #######################
 
-# remove participants who did not consent to the study
+### Remove participants who did not consent to the study
 fall <- fall[ which( fall$Q1.1 == 1 ), ] # 3 participants removed
 
-# remove variables containing identifiable or unnecessary information
-fall.qc <- fall[ ,-c( 1:4, 8, 10:18, 246:251 ) ]
+### Remove variables containing identifiable or unnecessary information
+fall <- fall %>% select( -StartDate, -EndDate, -Status, -IPAddress, -RecordedDate,
+                            -RecipientLastName, -RecipientFirstName, -RecipientEmail,
+                            -ExternalReference, -LocationLatitude, -LocationLongitude,
+                            -DistributionChannel, -UserLanguage, -Q1.1, -Q19.1, -Q19.2,
+                            -Create_New_Field_or_Choose_From_Dropdown..., -id,
+                            -Q2.34___Parent_Topics, -Q2.34___Topics )
 
-# create variable names
-names( fall.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex", 
+
+### Create variable names
+names( fall ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex", 
                        "Gender", "Gender_Other", "Feminimity", "Masculinity", 
                        "SexOrient", "SexOrient_Other", "Race1", "Race2", "Race3", 
                        "Race4", "Race5", "Race6", "Race7", "Race8", "Race_Other", 
@@ -70,41 +76,42 @@ names( fall.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "PHQ1", "PHQ2", "PHQ3", "PHQ4", "PHQ5", "PHQ6", "PHQ7", 
                        "PHQ8", "PHQ9", "valid5" )
 
-# check validity questions
-table( fall.qc$valid1 ) # correct answer = 1 (n = 244)
-table( fall.qc$valid2 ) # correct answer = 6 (n = 271)
-table( fall.qc$valid3 ) # correct answer = 1 (n = 147)
-table( fall.qc$valid4 ) # correct answer = 1 (n = 271)
-table( fall.qc$valid5 ) # correct answer = 1 (n = 234)
+### Check validity questions
+table( fall$valid1 ) # correct answer = 1 (n = 244)
+table( fall$valid2 ) # correct answer = 6 (n = 271)
+table( fall$valid3 ) # correct answer = 1 (n = 147)
+table( fall$valid4 ) # correct answer = 1 (n = 271)
+table( fall$valid5 ) # correct answer = 1 (n = 234)
 
-fall.qc$keep <- ifelse( fall.qc$valid1 == 1 & fall.qc$valid2 == 6 & 
-                          fall.qc$valid3 == 6 & fall.qc$valid4 == 1 & 
-                          fall.qc$valid5 == 1, 1, 0 )
+fall$keep <- ifelse( fall$valid1 == 1 & fall$valid2 == 6 & 
+                          fall$valid3 == 6 & fall$valid4 == 1 & 
+                          fall$valid5 == 1, 1, 0 )
 
-table( fall.qc$keep, exclude = NULL ) # 6 valid participants
+table( fall$keep, exclude = NULL ) # 6 valid participants
 
-### the following quality assurance questions may not be valid
+### The following quality assurance questions may not be valid:
 # I get paid bi-weekly by unicorns
 # All of my friends say that I would make a great poodle
 # All of my friends are space aliens
 
-# only use quality assurance items that ask, "please choose 'strongly agree/disagree'"
-fall.qc$keep <- ifelse( fall.qc$valid2 == 6 & fall.qc$valid4 == 1, 1, 0 )
+### Only use quality assurance items that ask, "Please choose 'strongly agree/disagree'"
+fall$keep <- ifelse( fall$valid2 == 6 & fall$valid4 == 1, 1, 0 )
 
-table( fall.qc$keep, exclude = NULL ) # 261 valid participants
+table( fall$keep, exclude = NULL ) # 261 valid participants
 
-fall.qc <- fall.qc[ which( fall.qc$keep == 1 ), ]
+fall <- fall[ which( fall$keep == 1 ), ]
 
 
-# explore study completion time
-fall.qc$Duration.M <- fall.qc$Duration / 60 # convert from seconds to minutes
-describe( fall.qc$Duration.M )
+### Explore study completion time
+fall$Duration.M <- fall$Duration / 60 # convert from seconds to minutes
+describe( fall$Duration.M )
 #  n    mean    sd     median    min     max   
 # 261  88.11  326.27   25.40    9.25   3095.20
 
+### May want to consider removing participants below a certain time cut-off
 
-# write out raw data file for data sharing
-write_csv( fall.qc, "raw_data_fall.csv" )
+### Write out data file for data sharing
+write_csv( fall, "AIM_data_fall.csv" )
 
 
 
@@ -113,14 +120,17 @@ write_csv( fall.qc, "raw_data_fall.csv" )
                        ### QC of Spring data ###
                        #########################
 
-# remove participants who did not consent to the study
+### Remove participants who did not consent to the study
 spring <- spring[ which( spring$Q1.1 == 1 ), ] # 3 participants removed
 
-# remove variables containing identifiable or unnecessary information
-spring.qc <- spring[ ,-c( 1:3, 7, 9:11, 288:293 ) ]
+### Remove variables containing identifiable or unnecessary information
+spring <- spring %>% select( -StartDate, -EndDate, - Status, -RecordedDate, 
+                             -DistributionChannel, -UserLanguage, -Q1.1,
+                             -Q19.1, -Q19.2, -Create_New_Field_or_Choose_From_Dropdown...,
+                             -id, -Q2.34___Parent_Topics, -Q2.34___Topics )
 
-# create variable names
-names( spring.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex", 
+### Create variable names
+names( spring ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex", 
                        "Gender", "Gender_Other", "Feminimity", "Masculinity", 
                        "SexOrient", "SexOrient_Other", "Race1", "Race2", "Race3", 
                        "Race4", "Race5", "Race6", "Race7", "Race8", "Race_Other", 
@@ -175,29 +185,30 @@ names( spring.qc ) <- c( "Progress", "Duration", "Finished", "ID", "Age", "Sex",
                        "PHQ8", "PHQ9", "valid5", "COVID1", "COVID2", "COVID3", "COVID4", 
                        "COVID5", "COVID6", "COVID7", "COVID8", "COVID9" )
 
-# remove participants with incorrect responses to quality assurance questions
-# all of these items ask for participants to choose "strongly agree/disagree"
-table( spring.qc$valid1 ) # correct answer = 1 (n = 451)
-table( spring.qc$valid2 ) # correct answer = 6 (n = 427)
-table( spring.qc$valid3 ) # correct answer = 6 (n = 431)
-table( spring.qc$valid4 ) # correct answer = 1 (n = 419)
-table( spring.qc$valid5 ) # correct answer = 1 (n = 443)
+### Remove participants with incorrect responses to any quality assurance questions
+### All of these items ask for participants to choose "strongly agree/disagree"
+table( spring$valid1 ) # correct answer = 1 (n = 451)
+table( spring$valid2 ) # correct answer = 6 (n = 427)
+table( spring$valid3 ) # correct answer = 6 (n = 431)
+table( spring$valid4 ) # correct answer = 1 (n = 419)
+table( spring$valid5 ) # correct answer = 1 (n = 443)
 
-spring.qc$keep <- ifelse( spring.qc$valid1 == 1 & spring.qc$valid2 == 6 & 
-                            spring.qc$valid3 == 6 & spring.qc$valid4 == 1 & 
-                            spring.qc$valid5 == 1, 1, 0 )
+spring$keep <- ifelse( spring$valid1 == 1 & spring$valid2 == 6 & 
+                            spring$valid3 == 6 & spring$valid4 == 1 & 
+                            spring$valid5 == 1, 1, 0 )
 
-table( spring.qc$keep, exclude = NULL ) # 364 valid participants
+table( spring$keep, exclude = NULL ) # 364 valid participants
 
-spring.qc <- spring.qc[ which( spring.qc$keep == 1 ), ]
+spring <- spring[ which( spring$keep == 1 ), ]
 
 
-# explore study completion time
-spring.qc$Duration.M <- spring.qc$Duration / 60 # convert from seconds to minutes
-describe( spring.qc$Duration.M )
+### Explore study completion time
+spring$Duration.M <- spring$Duration / 60 # convert from seconds to minutes
+describe( spring$Duration.M )
 #  n    mean    sd     median   min    max   
 # 364  153.66  783.42  31.73  11.72  11661.02
 
+### May want to consider removing participants below a certain time cut-off
 
-# write out raw data file for data sharing
-write_csv( spring.qc, "raw_data_spring.csv" )
+### Write out raw data file for data sharing
+write_csv( spring, "AIM_data_spring.csv" )
