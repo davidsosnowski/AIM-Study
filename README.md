@@ -12,7 +12,7 @@ Marcia A. Winter, PhD: <mawinter@vcu.edu>\
 David W. Sosnowski, PhD: <dsosnow1@jhu.edu>\
 CJ Alderson, MS: <aldersoncj@vcu.edu>\
 Cathryn Richmond, PhD: <richmondce@alumni.vcu.edu>\
-Casey Burton, MEd: <burtoncd@vcu.edu>\
+Casey Burton, MEd: <burtoncd@vcu.edu>
 
 ## Directories
 **raw_data**: Contains code to prepare the raw data for sharing. Collaborators should start with the data files in this folder.
