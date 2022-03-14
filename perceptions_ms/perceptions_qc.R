@@ -119,10 +119,6 @@ spring2$ACE15.1 <- ifelse( spring2$ACE15.1 == 24, 1, 0 )
 ### Create cohort variable for merging
 spring2$cohort <- 2
 
-### Check if column names match
-stopifnot( identical( colnames( fall2 ), colnames( spring2 ) ) )
-# COVID items not in fall cohort
-
 ### Merge tibbles
 df1 <- bind_rows( fall2[ 1:261, 1:64 ], spring2[ 1:364, 1:73 ] )
 
