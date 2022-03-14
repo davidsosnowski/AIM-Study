@@ -1,11 +1,11 @@
-#####################################################
+################################################################################
 # ACEs, Identity & Morality (AIM) Study
 # Data Preparation and QC
 # Author: David W. Sosnowski
 # Email: dsosnow1@jhu.edu
 # Manuscript: Perceived Negative Effects of Adverse Childhood Experiences as a 
 # Predictor of Depressive and Anxiety Symptoms Among College Students
-#####################################################
+################################################################################
 
 getwd()
 
@@ -531,6 +531,9 @@ ggplot( temp, aes( x = as.factor( COVID6.f ), fill = as.factor( COVID6.f ) ) ) +
   theme( legend.position = "none" ) + ggtitle( "COVID-19 Effects on Depression" ) +
   xlab( "Response" ) + ylab( "Frequency" )
 
+### Distributions are not as expected (i.e., very few reported worsening anxiety & depression)
+### May not be able to use these variables as-is (i.e., may need to combine latter two responses)
+
 ### Clean up environment
 rm( list = c( "df3", "temp" ) )
 
@@ -581,6 +584,12 @@ cors( corrs ) %>%
   scale_y_discrete( expand = c( 0,0 ) ) +
   theme( text = element_text( family = "Times", size = 18 ) ) +
   theme( axis.text.x = element_text( angle = -45, margin = margin( 0,0,0,0 ), hjust = .05, vjust = .5 ) )
+
+### COVID anxiety and depression items, respectively, are negatively associated 
+### with anxiety and depression. So, those with low anxiety & depression saw
+### increases in these symptoms during COVID, but the opposite may not be true?
+### Considering the distribution and availability of this item for only a portion
+### of spring participants, will exclude from downstream analyses.
 
 ### Wrrite out file for analysis
 write_csv( df2, file = "data_for_analysis.csv" )
