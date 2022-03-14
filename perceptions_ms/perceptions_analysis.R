@@ -43,7 +43,7 @@ ggplot( m1.diag, aes( ACE.percep, GAD7.rtot ) ) +
 ### Checking model assumptions
 par( mfrow = c( 2, 2 ) )
 plot( m1 )
-# Assumptions seems to be met, but want to check for possible outliers
+# Assumptions appear to be met, but want to check for possible outliers
 
 ### Add observations indices to diagnostics tibble
 m1.diag <- m1.diag %>%
@@ -90,7 +90,7 @@ ggplot( m2.diag, aes( ACE.count, PHQ9.rtot ) ) +
 ### Checking model assumptions
 par( mfrow = c( 2, 2 ) )
 plot( m2 )
-# Assumptions seems to be met, though may have an issue with heteroscedasticity
+# Assumptions appear to be met, though may have an issue with heteroscedasticity
 
 ### Check this assumption
 par( mfrow = c( 1,2 ) )
@@ -123,4 +123,78 @@ m2.diag %>% top_n( 10, wt = .cooksd )
 # Keeping all cases.
 
 
-# DONE !
+
+############################################
+##            Sensitivity Analyses        ## 
+## Remove cases with short study duration ##
+############################################
+
+### Remove cases with study duration < 20 minutes
+df2 <- df1[ which( df1$Duration.M > 20 ), ]
+
+
+#############################
+# Model 3
+# Outcome: GAD-7 total score
+#############################
+
+### Define & run model
+m3 <- lm( GAD7.rtot ~ Age + Race.b + m0f1 + factor( ses1 ) + ACE.percep + 
+            ACE.count + ACE.percep:ACE.count, data = df2 )
+
+### Model summary
+summ( m3 ) # similar results
+
+### Look at fitted values and residuals 
+### for significant predictor (ACE.percep)
+m3.diag <- augment( m3 )
+head( m3.diag )
+ggplot( m3.diag, aes( ACE.percep, GAD7.rtot ) ) +
+  geom_point() +
+  stat_smooth( method = lm, se = F ) +
+  geom_segment( aes( xend = ACE.percep, yend = .fitted ), color = "red", size = 0.3 )
+
+### Checking model assumptions
+par( mfrow = c( 2, 2 ) )
+plot( m3 )
+# Assumptions appear to be met
+
+
+#############################
+# Model 4
+# Outcome: PHQ-9 total score
+#############################
+
+### Define & run model
+m4 <- lm( PHQ9.rtot ~ Age + Race.b + m0f1 + factor( ses1 ) + ACE.percep + 
+            ACE.count + ACE.percep:ACE.count, data = df2 )
+
+### Model summary
+summ( m4 ) # similar results
+
+### Look at fitted values and residuals 
+### for significant predictors (ACE.count, ACE.percep)
+m4.diag <- augment( m4 )
+head( m4.diag )
+
+#ACE.percep
+ggplot( m4.diag, aes( ACE.percep, PHQ9.rtot ) ) +
+  geom_point() +
+  stat_smooth( method = lm, se = F ) +
+  geom_segment( aes( xend = ACE.percep, yend = .fitted ), color = "red", size = 0.3 )
+
+#ACE.count
+ggplot( m4.diag, aes( ACE.count, PHQ9.rtot ) ) +
+  geom_point() +
+  stat_smooth( method = lm, se = F ) +
+  geom_segment( aes( xend = ACE.count, yend = .fitted ), color = "red", size = 0.3 )
+
+### Checking model assumptions
+par( mfrow = c( 2, 2 ) )
+plot( m4 )
+# Assumptions appear to be met
+
+### Results and conclusions are similar after sensitivity analysis
+
+# DONE
+################################################################################

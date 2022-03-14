@@ -222,6 +222,25 @@ df1$GAD.clinical <- cut(
 table( df1$GAD.clinical )
 prop.table( table( df1$GAD.clinical ) )*100
 
+### Visualize data
+
+#clinical cut-offs
+ggplot( df1, aes( x = as.factor( GAD.clinical ), fill = as.factor( GAD.clinical ) ) ) + 
+  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
+  scale_fill_brewer( palette = "Set2" ) +
+  theme( legend.position = "none" ) + ggtitle( "GAD-7 Clinical Cut-offs" ) +
+  xlab( "Response" ) + ylab( "Frequency" )
+
+#total scores (revised coding)
+psych::describe( df1$GAD7.rtot )
+ggplot( data = df1, aes( GAD7.rtot ) ) + geom_histogram( aes( y = ..count.. ), 
+                  breaks = seq( 0, 21, by = 1 ),
+                  col = "black", 
+                  fill = "dodgerblue", 
+                  alpha = 1 ) +
+  labs( title = "Histogram of GAD-7 Total Scores", 
+        x = "GAD-7 Total Scores", y = "Frequency" )
+
 
 ### Create PHQ-9 total scores
 df1$PHQtot <- df1$PHQ1 + df1$PHQ2 + df1$PHQ3 + df1$PHQ4 + df1$PHQ5 + df1$PHQ6 + 
@@ -298,17 +317,23 @@ prop.table( table( df1$PHQ.clinical ) )*100
 
 
 ### Visualize data
-ggplot( df1, aes( x = as.factor( GAD.clinical ), fill = as.factor( GAD.clinical ) ) ) + 
-  geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
-  scale_fill_brewer( palette = "Set2" ) +
-  theme( legend.position = "none" ) + ggtitle( "Bar Chart of GAD-7 Clinical Cut-offs" ) +
-  xlab( "Clinical Cut-off" ) + ylab( "Frequency" )
 
+#clinical cut-offs
 ggplot( df1, aes( x = as.factor( PHQ.clinical ), fill = as.factor( PHQ.clinical ) ) ) + 
   geom_bar( ) + geom_text( stat = "count", aes( label = ..count.., vjust = -.3 ) ) +
   scale_fill_brewer( palette = "Set2" ) +
-  theme( legend.position = "none" ) + ggtitle( "Bar Chart of PHQ-9 Clinical Cut-offs" ) +
-  xlab( "Clinical Cut-off" ) + ylab( "Frequency" )
+  theme( legend.position = "none" ) + ggtitle( "PHQ-9 Clinical Cut-offs" ) +
+  xlab( "Response" ) + ylab( "Frequency" )
+
+#total scores (revised coding)
+psych::describe( df1$PHQ9.rtot )
+ggplot( data = df1, aes( PHQ9.rtot ) ) + geom_histogram( aes( y = ..count.. ), 
+                                                         breaks = seq( 0, 27, by = 1 ),
+                                                         col = "black", 
+                                                         fill = "dodgerblue", 
+                                                         alpha = 1 ) +
+  labs( title = "Histogram of GAD-7 Total Scores", 
+        x = "GAD-7 Total Scores", y = "Frequency" )
 
 ### Are anxiety and depressive symptoms correlated?
 cor.test( df1$GAD7.rtot, df1$PHQ9.rtot )
