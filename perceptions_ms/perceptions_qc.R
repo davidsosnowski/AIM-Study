@@ -328,8 +328,8 @@ ggplot( data = df1, aes( PHQ9.rtot ) ) + geom_histogram( aes( y = ..count.. ),
                                                          col = "black", 
                                                          fill = "dodgerblue", 
                                                          alpha = 1 ) +
-  labs( title = "Histogram of GAD-7 Total Scores", 
-        x = "GAD-7 Total Scores", y = "Frequency" )
+  labs( title = "Histogram of PHQ-9 Total Scores", 
+        x = "PHQ-9 Total Scores", y = "Frequency" )
 
 ### Are anxiety and depressive symptoms correlated?
 cor.test( df1$GAD7.rtot, df1$PHQ9.rtot )
@@ -556,7 +556,7 @@ ggplot( temp, aes( x = as.factor( COVID6.f ), fill = as.factor( COVID6.f ) ) ) +
 ### May not be able to use these variables as-is (i.e., may need to combine latter two responses)
 
 ### Clean up environment
-rm( list = c( "df3", "temp" ) )
+rm( temp )
 
 # Covariates cleaned #
 ################################################################################
@@ -603,7 +603,7 @@ cors( corrs ) %>%
   theme_classic() +
   scale_x_discrete( expand = c( 0,0 ) ) +
   scale_y_discrete( expand = c( 0,0 ) ) +
-  theme( text = element_text( family = "Times", size = 18 ) ) +
+  theme( text = element_text( family = "Times", size = 12 ) ) +
   theme( axis.text.x = element_text( angle = -45, margin = margin( 0,0,0,0 ), hjust = .05, vjust = .5 ) )
 
 ### COVID anxiety and depression items, respectively, are negatively associated 
