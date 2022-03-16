@@ -44,8 +44,55 @@ table( fall2$m0f1, exclude = NULL )
 # 6 (Pacific Islander)
 # 7 (Caucasian or European American)
 # 8 (other) - most responses were Black/African American
-fall2$Race.b <- ifelse( fall2$Race7 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) & is.na( fall2$Race3 ) & 
-                           is.na( fall2$Race4 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) & is.na( fall2$Race8 ), 1, 0 )
+fall2$Race <- ifelse( fall2$Race1 == 1 & is.na( fall2$Race2 ) & is.na( fall2$Race3 ) 
+                      & is.na( fall2$Race4 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) 
+                      & is.na( fall2$Race7 ) & is.na( fall2$Race8 ), 1, 0 )
+
+fall2$Race <- ifelse( fall2$Race2 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race3 ) 
+                      & is.na( fall2$Race4 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) 
+                      & is.na( fall2$Race7 ) & is.na( fall2$Race8 ), 2, fall2$Race )
+
+fall2$Race <- ifelse( fall2$Race3 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) 
+                      & is.na( fall2$Race4 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) 
+                      & is.na( fall2$Race7 ) & is.na( fall2$Race8 ), 3, fall2$Race )
+
+fall2$Race <- ifelse( fall2$Race4 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) 
+                      & is.na( fall2$Race3 ) & is.na( fall2$Race5 ) & is.na( fall2$Race6 ) 
+                      & is.na( fall2$Race7 ) & is.na( fall2$Race8 ), 4, fall2$Race )
+
+fall2$Race <- ifelse( fall2$Race5 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) 
+                      & is.na( fall2$Race3 ) & is.na( fall2$Race4 ) & is.na( fall2$Race6 ) 
+                      & is.na( fall2$Race7 ) & is.na( fall2$Race8 ), 5, fall2$Race )
+
+fall2$Race <- ifelse( fall2$Race6 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) 
+                      & is.na( fall2$Race3 ) & is.na( fall2$Race4 ) & is.na( fall2$Race5 ) 
+                      & is.na( fall2$Race7 ) & is.na( fall2$Race8 ), 6, fall2$Race )
+
+fall2$Race <- ifelse( fall2$Race7 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) 
+                      & is.na( fall2$Race3 ) & is.na( fall2$Race4 ) & is.na( fall2$Race5 ) 
+                      & is.na( fall2$Race6 ) & is.na( fall2$Race8 ), 7, fall2$Race )
+
+fall2$Race <- ifelse( fall2$Race8 == 1 & is.na( fall2$Race1 ) & is.na( fall2$Race2 ) 
+                      & is.na( fall2$Race3 ) & is.na( fall2$Race4 ) & is.na( fall2$Race5 ) 
+                      & is.na( fall2$Race6 ) & is.na( fall2$Race7 ), 8, fall2$Race )
+table( fall2$Race )
+
+### Look at 0's (bi-racial?) and "other"
+df <- fall2[ which( fall2$Race == 0 ), ]
+df <- df[ ,c( 1, 5:13 ) ]
+
+### Most can be categorized as bi-racial/ethnic
+### Those that selected Race3 (African) and Other saying "Black/African American"
+### Will be coded as Race3 (This item choice likely reflects Black/African American students)
+fall2$Race <- ifelse( fall2$Race == 0 & fall2$Race3 == 1 & fall2$Race8 == 1, 3, fall2$Race )
+table( fall2$Race )
+
+### Change NA to 0 to indicate bi-racial/ethnic
+fall2$Race <- ifelse( is.na( fall2$Race ), 0, fall2$Race )
+table( fall2$Race )
+
+### Create binary race variable (White vs Other)
+fall2$Race.b <- ifelse( fall2$Race == 7, 1, 0 )
 table( fall2$Race.b, exclude = NULL )
 #  0 (other)   1 (Caucasian/European American)
 #     174         87 
@@ -93,8 +140,65 @@ table( spring2$m0f1, exclude = NULL )
 #    85           279 
 
 ### Recode race (see codes above)
-spring2$Race.b <- ifelse( spring2$Race7 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) & is.na( spring2$Race3 ) & 
-                          is.na( spring2$Race4 ) & is.na( spring2$Race5 ) & is.na( spring2$Race6 ) & is.na( spring2$Race8 ), 1, 0 )
+spring2$Race <- ifelse( spring2$Race1 == 1 & is.na( spring2$Race2 ) & is.na( spring2$Race3 ) 
+                      & is.na( spring2$Race4 ) & is.na( spring2$Race5 ) & is.na( spring2$Race6 ) 
+                      & is.na( spring2$Race7 ) & is.na( spring2$Race8 ), 1, 0 )
+
+spring2$Race <- ifelse( spring2$Race2 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race3 ) 
+                      & is.na( spring2$Race4 ) & is.na( spring2$Race5 ) & is.na( spring2$Race6 ) 
+                      & is.na( spring2$Race7 ) & is.na( spring2$Race8 ), 2, spring2$Race )
+
+spring2$Race <- ifelse( spring2$Race3 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) 
+                      & is.na( spring2$Race4 ) & is.na( spring2$Race5 ) & is.na( spring2$Race6 ) 
+                      & is.na( spring2$Race7 ) & is.na( spring2$Race8 ), 3, spring2$Race )
+
+spring2$Race <- ifelse( spring2$Race4 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) 
+                      & is.na( spring2$Race3 ) & is.na( spring2$Race5 ) & is.na( spring2$Race6 ) 
+                      & is.na( spring2$Race7 ) & is.na( spring2$Race8 ), 4, spring2$Race )
+
+spring2$Race <- ifelse( spring2$Race5 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) 
+                      & is.na( spring2$Race3 ) & is.na( spring2$Race4 ) & is.na( spring2$Race6 ) 
+                      & is.na( spring2$Race7 ) & is.na( spring2$Race8 ), 5, spring2$Race )
+
+spring2$Race <- ifelse( spring2$Race6 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) 
+                      & is.na( spring2$Race3 ) & is.na( spring2$Race4 ) & is.na( spring2$Race5 ) 
+                      & is.na( spring2$Race7 ) & is.na( spring2$Race8 ), 6, spring2$Race )
+
+spring2$Race <- ifelse( spring2$Race7 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) 
+                      & is.na( spring2$Race3 ) & is.na( spring2$Race4 ) & is.na( spring2$Race5 ) 
+                      & is.na( spring2$Race6 ) & is.na( spring2$Race8 ), 7, spring2$Race )
+
+spring2$Race <- ifelse( spring2$Race8 == 1 & is.na( spring2$Race1 ) & is.na( spring2$Race2 ) 
+                      & is.na( spring2$Race3 ) & is.na( spring2$Race4 ) & is.na( spring2$Race5 ) 
+                      & is.na( spring2$Race6 ) & is.na( spring2$Race7 ), 8, spring2$Race )
+table( spring2$Race )
+
+### Look at 0's (bi-racial?) and "other"
+df <- spring2[ which( spring2$Race == 0 ), ]
+df <- df[ ,c( 1, 5:13 ) ]
+
+### Most can be categorized as bi-racial/ethnic
+### Those that selected Race3 (African) and Other saying "Black/African American"
+### Will be coded as Race3 (This item choice likely reflects Black/African American students)
+### Those that selected Race5 (East Asian) and Other saying [south/central] east Asian
+### Will be coded as Race5. Maybe collapse all Asian response options?
+spring2$Race <- ifelse( spring2$Race == 0 & spring2$Race3 == 1 & spring2$Race8 == 1, 3, spring2$Race )
+table( spring2$Race )
+
+### Change NA to 0 to indicate bi-racial/ethnic
+spring2$Race <- ifelse( is.na( spring2$Race ), 0, spring2$Race )
+table( spring2$Race )
+
+### Recode Central/South East Asian
+spring2$Race <- ifelse( spring2$Race == 0 & spring2$Race5 == 1 & spring2$Race8 == 1, 5, spring2$Race )
+table( spring2$Race )
+
+### Change NA to 0 to indicate bi-racial/ethnic
+spring2$Race <- ifelse( is.na( spring2$Race ), 0, spring2$Race )
+table( spring2$Race )
+
+### Create binary race variable (White vs Other)
+spring2$Race.b <- ifelse( spring2$Race == 7, 1, 0 )
 table( spring2$Race.b, exclude = NULL )
 #  0 (other)   1 (Caucasian/European American)
 #     257         107 
@@ -120,7 +224,7 @@ spring2$ACE15.1 <- ifelse( spring2$ACE15.1 == 24, 1, 0 )
 spring2$cohort <- 2
 
 ### Merge tibbles
-df1 <- bind_rows( fall2[ 1:261, 1:64 ], spring2[ 1:364, 1:73 ] )
+df1 <- bind_rows( fall2[ 1:261, 1:65 ], spring2[ 1:364, 1:74 ] )
 
 ### Clean up environment
 rm( list = c( "fall", "fall2", "spring", "spring2" ) )
@@ -205,7 +309,7 @@ df1$GAD7.rtot <- df1$GAD1.r + df1$GAD2.r + df1$GAD3.r + df1$GAD4.r +
   df1$GAD5.r + df1$GAD6.r + df1$GAD7.r
 
 ### Check reliability
-psych::alpha( df1[ ,c( 75:81 ) ] ) # .87
+psych::alpha( df1[ ,c( 76:82 ) ] ) # .87
 
 ### Create clinical cut-offs
 df1$GAD.clinical <- cut(
@@ -298,7 +402,7 @@ df1$PHQ9.rtot <- df1$PHQ1.r + df1$PHQ2.r + df1$PHQ3.r + df1$PHQ4.r + df1$PHQ5.r 
   df1$PHQ6.r + df1$PHQ7.r + df1$PHQ8.r + df1$PHQ9.r
 
 ### Check reliability
-psych::alpha( df1[ ,c( 85:93 ) ] ) # .89
+psych::alpha( df1[ ,c( 86:94 ) ] ) # .89
 
 ### Create clinical cut-offs
 df1$PHQ.clinical <- cut(
@@ -454,13 +558,16 @@ psych::describe( df2$ACE.percep )
 ### Visualize perception scores
 df3 <- df2[ which( !is.na( df2$ACE.percep ) ), ] # remove NA for plotting
 ggplot( df3, aes( x = ACE.percep ) ) + geom_histogram( color = "darkblue", fill = "lightblue" ) + 
-  geom_vline( aes( xintercept = mean( ACE.percep ) ), color = "blue", linetype = "dashed", size = 1 )
+  geom_vline( aes( xintercept = mean( ACE.percep ) ), color = "blue", linetype = "dashed", size = 1 ) +
+  scale_x_continuous( name = "Average Perceived Negative Effect", breaks = seq( 0,10,1 ) ) + 
+  scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) )
 
 ### Facet by cohort
 df3$cohort <- df3$cohort <- factor( df3$cohort, levels = c( 1, 2 ), labels = c( "Fall", "Spring" ) )
-ggplot( df3, aes( x = ACE.percep ) ) + geom_histogram( color = "darkblue", fill = "lightblue" ) + 
-  geom_vline( aes( xintercept = mean( ACE.percep ) ), color = "blue", linetype = "dashed", size = 1 ) +
-  facet_grid( . ~ cohort )
+ggplot( df3, aes( y = ACE.percep, x = cohort, fill = cohort ) ) +
+  geom_boxplot( position = position_dodge( width = .9 ) ) +
+  labs( title = "Boxplot of Perceived Negative Effect of ACEs",
+        fill = "Cohort" ) + xlab( "Cohort" ) + ylab( "Average Perceived Negative Effect" )
 
 ### Clean up environment
 rm( list = c( "means.all", "means.fall", "means.spring", "ACES", 
@@ -468,7 +575,7 @@ rm( list = c( "means.all", "means.fall", "means.spring", "ACES",
               "ACE.percep.long", "ACE.percep.spring", "ACE.percep.spring.long", 
               "df1", "df3" ) )
 
-# Predictor varialbes cleaned #
+# Predictor variables cleaned #
 ################################################################################
 
 ################
@@ -612,6 +719,6 @@ cors( corrs ) %>%
 ### Considering the distribution and availability of this item for only a portion
 ### of spring participants, will exclude from downstream analyses.
 
-### Wrrite out file for analysis
+### Write out file for analysis
 write_csv( df2, file = "data_for_analysis.csv" )
 
