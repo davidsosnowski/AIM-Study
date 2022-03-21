@@ -19,4 +19,4 @@ Casey Burton, MEd: <burtoncd@vcu.edu>
 
 **perceptions_ms**: Contains code and associated data files for the following manuscript, which is currently under review: *Perceived Negative Effects of Adverse Childhood Experiences as a Predictor of Depressive and Anxiety Symptoms Among College Students*.
 
- 
+**Survey_and_Codebook**: Contains complete AIM Study codebook and original survey, as presented to study participants on Qualtrics. 
