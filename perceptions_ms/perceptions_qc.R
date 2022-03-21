@@ -218,7 +218,7 @@ spring2$ACE11.1 <- ifelse( spring2$ACE11.1 == 5, 1, 0 )
 spring2$ACE12.1 <- ifelse( spring2$ACE12.1 == 23, 1, 0 )
 spring2$ACE13.1 <- ifelse( spring2$ACE13.1 == 1, 1, 0 )
 spring2$ACE14.1 <- ifelse( spring2$ACE14.1 == 1, 1, 0 )
-spring2$ACE15.1 <- ifelse( spring2$ACE15.1 == 24, 1, 0 )
+spring2$ACE15.1 <- ifelse( spring2$ACE15.1 == 23, 1, 0 )
 
 ### Create cohort variable for merging
 spring2$cohort <- 2
@@ -468,7 +468,7 @@ ggplot( ACES, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( 
          panel.grid.minor = element_blank(), axis.line = element_line( colour = "black" ), 
          panel.background = element_rect( fill = "transparent" ), 
          plot.background = element_rect( fill = "transparent", color = NA ) ) + 
-  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,13,1 ) ) + 
+  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,12,1 ) ) + 
   scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) )
 
 
@@ -480,7 +480,7 @@ ggplot( ACES, aes( x = ACE.count, fill = as.factor( ACE.count ) ) ) + geom_bar( 
          panel.grid.minor = element_blank(), axis.line = element_line( colour = "black" ), 
          panel.background = element_rect( fill = "transparent" ), 
          plot.background = element_rect( fill = "transparent", color = NA ) ) + 
-  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,13,1 ) ) + 
+  scale_x_continuous( name = "Number of Adverse Childhood Experiences", breaks = seq( 0,12,1 ) ) + 
   scale_y_continuous( name = "Frequency", expand = expansion( mult = c( 0, .1 ) ) ) + 
   facet_grid( . ~ cohort )
 
